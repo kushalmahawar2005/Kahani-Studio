@@ -15,7 +15,7 @@ export default function Showreel() {
 
   useEffect(() => {
     if (!videoRef.current) return;
-    
+
     if (isInView) {
       videoRef.current.muted = false;
       const playPromise = videoRef.current.play();
@@ -59,7 +59,7 @@ export default function Showreel() {
             <div className="aspect-[9/16] sm:aspect-[4/5] md:aspect-[21/9] relative">
               <video
                 ref={videoRef}
-                src="/r1.mp4"
+                src="/r1.mov"
                 loop
                 playsInline
                 muted
