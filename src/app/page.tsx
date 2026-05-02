@@ -211,7 +211,7 @@ export default function Home() {
               className="opacity-60 w-[12vw] max-w-[48px] md:max-w-[120px]"
             />
             <Image
-              src="/tilak_couple.png"
+              src="/branding_clean.png"
               alt="Kahani Clicks"
               width={800}
               height={500}
@@ -767,11 +767,10 @@ function FaqItem({
 }) {
   return (
     <div
-      className={`rounded-2xl border border-charcoal/10 transition-all duration-300 overflow-hidden ${
-        isOpen 
-          ? "shadow-lg ring-1 ring-charcoal/10 bg-[#FDFCF0]" 
-          : "bg-transparent hover:bg-charcoal/5"
-      }`}
+      className={`rounded-2xl border border-charcoal/10 transition-all duration-300 overflow-hidden ${isOpen
+        ? "shadow-lg ring-1 ring-charcoal/10 bg-[#FDFCF0]"
+        : "bg-transparent hover:bg-charcoal/5"
+        }`}
     >
       <button
         onClick={onClick}
