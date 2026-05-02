@@ -103,7 +103,7 @@ export default function Home() {
   }, [menuOpen]);
 
   return (
-    <main className="bg-[#F9F9EA] text-[#1a1a1a] selection:bg-charcoal selection:text-cream overflow-x-hidden">
+    <main className="relative bg-[#F9F9EA] text-[#1a1a1a] selection:bg-charcoal selection:text-cream overflow-x-hidden">
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full glass-light px-6 py-5 md:px-12 md:py-6">
         <div className="mx-auto flex max-w-[1800px] items-center justify-between">
@@ -197,7 +197,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
-            className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8"
+            className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8 relative"
+            style={{ position: "relative" }}
+            suppressHydrationWarning
           >
             <Image
               src="/chakra.png"
@@ -232,7 +234,9 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 3.2, duration: 1.6 }}
-            className="mt-4 md:mt-6 flex flex-col items-center px-6"
+            className="mt-4 md:mt-6 flex flex-col items-center px-6 relative"
+            style={{ position: "relative" }}
+            suppressHydrationWarning
           >
             <p className="max-w-sm md:max-w-md text-[9px] sm:text-[10px] md:text-xs leading-relaxed uppercase tracking-[0.2em] sm:tracking-[0.3em] md:tracking-widest text-zinc-500 text-center">
               Capturing the silent symphony of light and life with timeless precision.
@@ -267,7 +271,9 @@ export default function Home() {
               initial={{ height: 0 }}
               animate={{ height: 48 }}
               transition={{ delay: 3.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
-              className="mt-4 md:mt-6 w-[1px] bg-charcoal"
+              className="mt-4 md:mt-6 w-[1px] bg-charcoal relative"
+              style={{ position: "relative" }}
+              suppressHydrationWarning
             />
             <span className="mt-1 mb-1 text-[9px] font-bold uppercase tracking-[0.5em] text-zinc-400">
               Scroll
