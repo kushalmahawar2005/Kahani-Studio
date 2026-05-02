@@ -211,7 +211,7 @@ export default function Home() {
               className="opacity-60 w-[12vw] max-w-[48px] md:max-w-[120px]"
             />
             <Image
-              src="/branding_clean.png"
+              src="/tilak_couple.png"
               alt="Kahani Clicks"
               width={800}
               height={500}
@@ -283,13 +283,13 @@ export default function Home() {
           {/* Hero ScrollStack — cinematic image cards */}
           <ScrollStack>
             <ScrollStackImageCard
-              src="/postcss.config.jpeg"
+              src="/1000407545.jpg"
               title="Eternal Vows"
               subtitle="Wedding · Udaipur"
               index={0}
             />
             <ScrollStackImageCard
-              src="/CA9A1705.JPG"
+              src="/CA9A1703.JPG"
               title="Sacred Moments"
               subtitle="Ritual · Jaipur"
               index={1}
