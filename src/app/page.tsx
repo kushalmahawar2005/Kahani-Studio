@@ -207,8 +207,7 @@ export default function Home() {
               width={120}
               height={120}
               priority
-              style={{ width: "auto", height: "auto" }}
-              className="opacity-60 w-[12vw] max-w-[48px] md:max-w-[120px]"
+              className="opacity-60 w-[15vw] max-w-[50px] md:max-w-[120px] h-auto shrink-0"
             />
             <Image
               src="/branding_clean.png"
@@ -216,8 +215,7 @@ export default function Home() {
               width={800}
               height={500}
               priority
-              style={{ width: "auto", height: "auto" }}
-              className="mx-auto w-[60vw] sm:w-[50vw] max-w-[800px]"
+              className="mx-auto w-[60vw] sm:w-[50vw] max-w-[800px] h-auto shrink-0"
             />
             <Image
               src="/shankha.png"
@@ -225,8 +223,7 @@ export default function Home() {
               width={120}
               height={120}
               priority
-              style={{ width: "auto", height: "auto" }}
-              className="opacity-60 w-[12vw] max-w-[48px] md:max-w-[120px]"
+              className="opacity-60 w-[15vw] max-w-[50px] md:max-w-[120px] h-auto shrink-0"
             />
           </motion.div>
 
@@ -332,29 +329,48 @@ export default function Home() {
               Light, kept honest. <br />Stories, kept forever.
             </h2>
           </Reveal>
-          <div className="grid grid-cols-3 gap-2 md:gap-4">
-            {[
-              { src: "/1000407549.jpg", h: "h-[140px] sm:h-[180px] md:h-[420px]" },
-              { src: "/1000928374.jpg", h: "h-[180px] sm:h-[240px] md:h-[520px]" },
-              { src: "/1000851638.jpg", h: "h-[140px] sm:h-[180px] md:h-[420px]" },
-            ].map((p, i) => (
-              <motion.div
-                key={p.src}
-                initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1, delay: i * 0.12, ease: [0.19, 1, 0.22, 1] }}
-                className={`relative ${p.h} overflow-hidden`}
-              >
-                <Image
-                  src={p.src}
-                  alt=""
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                />
-              </motion.div>
-            ))}
+          <div className="relative overflow-hidden mt-8 md:mt-12 -mx-6 md:-mx-12">
+            <div className="absolute inset-y-0 left-0 w-8 md:w-32 bg-gradient-to-r from-[#F9F9EA] to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-8 md:w-32 bg-gradient-to-l from-[#F9F9EA] to-transparent z-10 pointer-events-none" />
+            
+            <motion.div
+              className="flex gap-4 md:gap-6 w-max pr-4 md:pr-6"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                duration: 25,
+                ease: "linear",
+                repeat: Infinity,
+              }}
+            >
+              {[
+                "/1000407549.jpg",
+                "/1000928376.jpg",
+                "/CA9A1703.JPG",
+                "/1000851638.jpg",
+                "/CA9A3856.JPG",
+                "/1000407545.jpg",
+                // Duplicate exactly 6 times for seamless infinite loop
+                "/1000407549.jpg",
+                "/1000928376.jpg",
+                "/CA9A1703.JPG",
+                "/1000851638.jpg",
+                "/CA9A3856.JPG",
+                "/1000407545.jpg",
+              ].map((src, i) => (
+                <div
+                  key={i}
+                  className="relative shrink-0 w-[75vw] sm:w-[350px] md:w-[400px] h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 75vw, 400px"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
