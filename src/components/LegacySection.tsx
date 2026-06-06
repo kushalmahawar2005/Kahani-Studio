@@ -4,8 +4,8 @@ import Reveal from "./Reveal";
 import { Camera, Film, User, ArrowUpRight } from "lucide-react";
 
 const stats = [
-  { num: "10+", label: "Years Experience" },
-  { num: "250+", label: "Stories Told" },
+  { num: "14+", label: "Years Experience" },
+  { num: "1000+", label: "Stories Told" },
 ];
 
 const services = [

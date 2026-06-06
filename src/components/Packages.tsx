@@ -1,46 +1,57 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Reveal from "./Reveal";
 import Magnetic from "./Magnetic";
 
 const tiers = [
   {
-    name: "Essence",
+    name: "Barsana 🌸",
     tag: "Intimate ceremonies",
-    price: "On request",
-    duration: "1 day · 1 cinematographer",
+    img: "/r2.jpg",
+    price: "Custom Quote",
+    duration: "1 day · solo cinematographer",
     bullets: [
-      "Editorial photography (300+ frames)",
-      "3-min highlight film",
-      "Hand-graded color, classical scoring",
-      "Online gallery, 4-week delivery",
+      "Candid Photography Coverage",
+      "3–5 Minute Highlight Film",
+      "Traditional Ceremony Documentation",
+      "Professionally Color Graded Images",
+      "Online Gallery Access",
+      "4 Week Delivery",
     ],
   },
   {
-    name: "Heirloom",
+    name: "Giriraj Ji ⛰️",
     tag: "Most chosen",
     featured: true,
-    price: "On request",
+    img: "/r1.jpg",
+    price: "Custom Quote",
     duration: "2 days · 2-person crew",
     bullets: [
-      "Full editorial coverage",
-      "8-min cinematic feature",
-      "Pre-wedding portrait session",
-      "Custom heirloom album draft",
-      "8-week delivery, archival masters",
+      "Complete Wedding Coverage",
+      "8–10 Minute Cinematic Film",
+      "Pre-Wedding Portrait Session",
+      "Bride & Groom Storytelling Reels",
+      "Drone Coverage",
+      "Premium Album Design",
+      "Priority Delivery",
     ],
   },
   {
-    name: "Magnum",
-    tag: "Multi-day weddings",
-    price: "On request",
+    name: "Vrindavan ❤️",
+    tag: "Grand multi-day weddings",
+    img: "/r3.jpg",
+    price: "Custom Quote",
     duration: "3+ days · full crew",
     bullets: [
-      "Documentary across all events",
-      "Feature-length film (20–30 min)",
-      "Drone & cinema-glass coverage",
-      "Bespoke leather album, signed prints",
-      "12-week delivery, world-anywhere travel",
+      "Multi-Day Wedding Documentation",
+      "Documentary Style Coverage",
+      "Feature-Length Wedding Film",
+      "Drone & Luxury Cinematography",
+      "Premium Wedding Album",
+      "Same-Day Wedding Teaser",
+      "Destination Wedding Coverage",
+      "Worldwide Travel Available",
     ],
   },
 ];
@@ -55,10 +66,10 @@ export default function Packages() {
               Investment
             </span>
             <h3 className="text-3xl sm:text-4xl md:text-7xl font-display tracking-tight">
-              Three ways to <span className="italic">begin.</span>
+              Choose the chapter of your <span className="italic">wedding story.</span>
             </h3>
             <p className="mt-6 mx-auto max-w-xl text-sm text-zinc-500 italic">
-              Every collection is bespoke — these are starting points, not ceilings.
+              Every wedding is unique. Our collections are thoughtfully designed to preserve every emotion, ritual, and memory with timeless elegance.
             </p>
           </div>
         </Reveal>
@@ -75,7 +86,7 @@ export default function Packages() {
                 delay: i * 0.12,
                 ease: [0.19, 1, 0.22, 1],
               }}
-              className={`relative p-8 md:p-10 flex flex-col ${
+              className={`group relative flex flex-col overflow-hidden ${
                 t.featured
                   ? "bg-charcoal text-cream"
                   : "bg-[#fdfcf0] border border-charcoal/10"
@@ -83,11 +94,30 @@ export default function Packages() {
             >
               {t.featured && (
                 <span
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] bg-gold text-charcoal"
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] bg-gold text-charcoal"
                 >
                   Most chosen
                 </span>
               )}
+
+              <div className="relative w-full aspect-[16/10] overflow-hidden">
+                <Image
+                  src={t.img}
+                  alt={t.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                />
+                <div
+                  className={`absolute inset-0 ${
+                    t.featured
+                      ? "bg-gradient-to-t from-charcoal via-charcoal/30 to-transparent"
+                      : "bg-gradient-to-t from-[#fdfcf0] via-[#fdfcf0]/20 to-transparent"
+                  }`}
+                />
+              </div>
+
+              <div className="relative flex flex-1 flex-col p-8 md:p-10 -mt-px">
               <span
                 className={`text-[10px] font-bold uppercase tracking-[0.5em] mb-4 ${
                   t.featured ? "text-cream/60" : "text-zinc-400"
@@ -159,6 +189,7 @@ export default function Packages() {
                     </span>
                   </a>
                 </Magnetic>
+              </div>
               </div>
             </motion.div>
           ))}

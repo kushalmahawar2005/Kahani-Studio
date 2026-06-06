@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const eventTypes = ["Wedding", "Pre-Wedding", "Portrait", "Editorial", "Other"];
-const budgets = ["< ₹2 L", "₹2 – 5 L", "₹5 – 10 L", "10 L +"];
+const budgets = ["₹50k - ₹2 L", "₹2 – 5 L", "₹5 – 10 L", "10 L +"];
 
 const FALLBACK_EMAIL = "J.k.sankhla123@gmail.com";
 

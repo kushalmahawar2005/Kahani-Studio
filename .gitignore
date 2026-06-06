@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 
+
+# Living Memories uploads + store
+/public/memories/
+/data/

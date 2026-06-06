@@ -15,8 +15,9 @@ export default function FloatingActions() {
 
   return (
     <>
-      {/* Right side floating actions (Back to top) */}
-      <div className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 md:bottom-8 md:right-8 z-[55] flex flex-col items-end gap-2 sm:gap-3">
+      {/* Right side floating actions — Back to top, Query Form & WhatsApp */}
+      <div className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 md:bottom-8 md:right-8 z-[55] flex flex-col items-end gap-3 sm:gap-4">
+        {/* Back to top */}
         <AnimatePresence>
           {showTop && (
             <motion.button
@@ -33,10 +34,7 @@ export default function FloatingActions() {
             </motion.button>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Left side floating actions (Query Form & WhatsApp) */}
-      <div className="fixed bottom-4 left-3 sm:bottom-5 sm:left-5 md:bottom-8 md:left-8 z-[55] flex flex-col items-start gap-3 sm:gap-4">
         {/* Query Form pulse button */}
         <motion.a
           href="#contact"
@@ -54,7 +52,7 @@ export default function FloatingActions() {
               <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
             </svg>
           </span>
-          <span className="hidden md:block absolute left-full top-1/2 -translate-y-1/2 ml-3 whitespace-nowrap bg-charcoal text-cream text-[10px] font-bold uppercase tracking-[0.3em] px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <span className="hidden md:block absolute right-full top-1/2 -translate-y-1/2 mr-3 whitespace-nowrap bg-charcoal text-cream text-[10px] font-bold uppercase tracking-[0.3em] px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Query Form
           </span>
         </motion.a>
@@ -80,7 +78,7 @@ export default function FloatingActions() {
               <path d="M16.005 32C13.27 32 10.6 31.272 8.27 29.872l-.502-.302L1.39 31.305l1.808-6.21-.358-.515c-1.47-2.357-2.27-5.114-2.272-7.87C.57 7.483 7.654.5 16.05.5 24.448.5 32 7.482 32 16.054 32 24.625 24.448 32 16.005 32zm0-29.5C8.96 2.5 2.57 8.86 2.57 16.71c0 2.43.7 4.84 2.012 6.916l.317.502-1.073 3.69 3.78-1.045.487.287c2.03 1.205 4.354 1.84 6.93 1.84 7.043 0 12.74-6.36 12.74-13.81S23.05 2.5 16.005 2.5z" />
             </svg>
           </span>
-          <span className="hidden md:block absolute left-full top-1/2 -translate-y-1/2 ml-3 whitespace-nowrap bg-[#25D366] text-white text-[10px] font-bold uppercase tracking-[0.3em] px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <span className="hidden md:block absolute right-full top-1/2 -translate-y-1/2 mr-3 whitespace-nowrap bg-[#25D366] text-white text-[10px] font-bold uppercase tracking-[0.3em] px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Chat with us
           </span>
         </motion.a>

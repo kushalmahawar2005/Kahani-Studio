@@ -14,7 +14,7 @@ export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({
   itemClassName = "",
 }) => (
   <div
-    className={`scroll-stack-card relative w-full rounded-2xl sm:rounded-[40px] shadow-[0_0_30px_rgba(0,0,0,0.12)] overflow-hidden origin-top ${itemClassName}`.trim()}
+    className={`scroll-stack-card relative w-full shadow-[0_0_30px_rgba(0,0,0,0.12)] overflow-hidden origin-top ${itemClassName}`.trim()}
     style={{
       backfaceVisibility: "hidden",
       transformStyle: "preserve-3d",
@@ -217,7 +217,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   return (
     <div ref={wrapperRef} className={`relative w-full ${className}`.trim()}>
       <div
-        className="scroll-stack-inner pt-0 px-3 sm:px-6 md:px-20 pb-32 sm:pb-48 md:pb-64"
+        className="scroll-stack-inner pt-0 px-0 pb-32 sm:pb-48 md:pb-64"
       >
         {children}
         <div className="scroll-stack-end w-full h-px" />

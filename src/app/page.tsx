@@ -193,39 +193,60 @@ export default function Home() {
         <div className="absolute inset-x-0 top-0 h-[1px] bg-charcoal/5 mx-20" />
 
         <div className="w-full flex flex-col items-center justify-start text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
+          <div
             className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8 relative"
             style={{ position: "relative" }}
             suppressHydrationWarning
           >
-            <Image
-              src="/chakra.png"
-              alt=""
-              width={120}
-              height={120}
-              priority
-              className="opacity-60 w-[15vw] max-w-[50px] md:max-w-[120px] h-auto shrink-0"
-            />
-            <Image
-              src="/branding_clean.png"
-              alt="Kahani Clicks"
-              width={800}
-              height={500}
-              priority
-              className="mx-auto w-[60vw] sm:w-[50vw] max-w-[800px] h-auto shrink-0"
-            />
-            <Image
-              src="/shankha.png"
-              alt=""
-              width={120}
-              height={120}
-              priority
-              className="opacity-60 w-[15vw] max-w-[50px] md:max-w-[120px] h-auto shrink-0"
-            />
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -90, scale: 0.85, rotate: -8 }}
+              animate={{ opacity: 0.6, x: 0, scale: 1, rotate: 0 }}
+              transition={{ delay: 2.6, duration: 1.6, ease: [0.19, 1, 0.22, 1] }}
+              className="shrink-0"
+              suppressHydrationWarning
+            >
+              <Image
+                src="/chakra.png"
+                alt=""
+                width={120}
+                height={120}
+                priority
+                className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
+              className="shrink-0"
+              suppressHydrationWarning
+            >
+              <Image
+                src="/branding_clean.png"
+                alt="Kahani Clicks"
+                width={800}
+                height={500}
+                priority
+                className="mx-auto w-[60vw] sm:w-[50vw] max-w-[800px] h-auto"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 90, scale: 0.85, rotate: 8 }}
+              animate={{ opacity: 0.6, x: 0, scale: 1, rotate: 0 }}
+              transition={{ delay: 2.6, duration: 1.6, ease: [0.19, 1, 0.22, 1] }}
+              className="shrink-0"
+              suppressHydrationWarning
+            >
+              <Image
+                src="/shankha.png"
+                alt=""
+                width={120}
+                height={120}
+                priority
+                className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
+              />
+            </motion.div>
+          </div>
 
           <motion.div
             initial={{ opacity: 0 }}

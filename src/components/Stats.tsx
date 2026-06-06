@@ -4,9 +4,9 @@ import { motion, useInView } from "framer-motion";
 import Reveal from "./Reveal";
 
 const stats = [
-  { num: 8, suffix: "", label: "Years of craft" },
-  { num: 240, suffix: "+", label: "Stories told" },
-  { num: 14, suffix: "", label: "Countries traveled" },
+  { num: 14, suffix: "", label: "Years of craft" },
+  { num: 1000, suffix: "+", label: "Stories told" },
+  { num: 2, suffix: "", label: "Countries traveled" },
   { num: 86, suffix: "K", label: "Frames archived" },
 ];
 
