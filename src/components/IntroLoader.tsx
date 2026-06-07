@@ -20,8 +20,10 @@ export default function IntroLoader() {
     }
     if (seen) return;
 
-    setShow(true);
-    document.body.style.overflow = "hidden";
+    const start = window.setTimeout(() => {
+      setShow(true);
+      document.body.style.overflow = "hidden";
+    }, 0);
 
     const t = window.setTimeout(() => {
       setShow(false);
@@ -32,6 +34,7 @@ export default function IntroLoader() {
     }, DURATION_MS);
 
     return () => {
+      window.clearTimeout(start);
       window.clearTimeout(t);
       document.body.style.overflow = "";
     };

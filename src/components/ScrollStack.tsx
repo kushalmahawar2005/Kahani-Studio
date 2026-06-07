@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import type { ReactNode } from "react";
 import Image from "next/image";
 
@@ -35,8 +35,6 @@ interface ScrollStackProps {
   scaleEndPosition?: string;
   baseScale?: number;
 }
-
-const MOBILE_QUERY = "(max-width: 639px)";
 
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
@@ -147,6 +145,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   useEffect(() => {
     const inner = wrapperRef.current;
     if (!inner) return;
+    const lastTransforms = lastRef.current;
 
     const cards = Array.from(
       inner.querySelectorAll(".scroll-stack-card")
@@ -210,7 +209,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (resizeTimer) window.clearTimeout(resizeTimer);
       if (ro) ro.disconnect();
-      lastRef.current.clear();
+      lastTransforms.clear();
     };
   }, [itemDistance, measure, update]);
 

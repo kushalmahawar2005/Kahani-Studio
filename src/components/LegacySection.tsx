@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
-import { Camera, Film, User, ArrowUpRight } from "lucide-react";
+import { Camera, Film, User, ArrowUpRight, type LucideIcon } from "lucide-react";
 
 const stats = [
   { num: "14+", label: "Years Experience" },
@@ -117,7 +117,15 @@ export default function LegacySection() {
   );
 }
 
-function ServiceCard({ title, desc, icon: Icon, delay, className = "" }: any) {
+type ServiceCardProps = {
+  title: string;
+  desc: string;
+  icon: LucideIcon;
+  delay: number;
+  className?: string;
+};
+
+function ServiceCard({ title, desc, icon: Icon, delay, className = "" }: ServiceCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

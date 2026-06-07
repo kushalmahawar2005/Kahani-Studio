@@ -1,6 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+
+const POINTER_FINE_QUERY = "(pointer: fine)";
+
+function getPointerFineSnapshot() {
+  return typeof window !== "undefined" && window.matchMedia(POINTER_FINE_QUERY).matches;
+}
+
+function subscribePointerFine(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const media = window.matchMedia(POINTER_FINE_QUERY);
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
 
 export default function CustomCursor() {
   const x = useMotionValue(-100);
@@ -9,12 +22,14 @@ export default function CustomCursor() {
   const sy = useSpring(y, { damping: 30, stiffness: 400, mass: 0.5 });
 
   const [variant, setVariant] = useState<"default" | "view" | "link">("default");
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useSyncExternalStore(
+    subscribePointerFine,
+    getPointerFineSnapshot,
+    () => false,
+  );
 
   useEffect(() => {
-    const isFine = window.matchMedia("(pointer: fine)").matches;
-    setEnabled(isFine);
-    if (!isFine) return;
+    if (!enabled) return;
 
     const move = (e: MouseEvent) => {
       x.set(e.clientX);
@@ -34,7 +49,7 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", over);
     };
-  }, [x, y]);
+  }, [enabled, x, y]);
 
   if (!enabled || variant !== "view") return null;
 

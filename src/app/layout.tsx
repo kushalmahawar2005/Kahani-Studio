@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
-import CustomCursor from "@/components/CustomCursor";
-import ScrollProgress from "@/components/ScrollProgress";
-import IntroLoader from "@/components/IntroLoader";
-import FloatingActions from "@/components/FloatingActions";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,12 +49,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-[#F9F9EA] text-[#1a1a1a] selection:bg-[#1a1a1a] selection:text-white"
         suppressHydrationWarning
       >
-        <IntroLoader />
-        <SmoothScroll />
-        <ScrollProgress />
-        <CustomCursor />
         {children}
-        <FloatingActions />
       </body>
     </html>
   );
