@@ -10,6 +10,7 @@ import ContactForm from "@/components/ContactForm";
 import AboutSection from "@/components/AboutSection";
 import Showreel from "@/components/Showreel";
 import Packages from "@/components/Packages";
+import PackageBuilder from "@/components/PackageBuilder";
 import ScrollStack, { ScrollStackImageCard } from "@/components/ScrollStack";
 import Stats from "@/components/Stats";
 import InstagramGrid from "@/components/InstagramGrid";
@@ -114,6 +115,7 @@ export default function Home() {
             <a href="#work" className="hover:opacity-40 transition-opacity" data-cursor="link">Portfolio</a>
             <a href="#about" className="hover:opacity-40 transition-opacity" data-cursor="link">Philosophy</a>
             <a href="#services" className="hover:opacity-40 transition-opacity" data-cursor="link">Services</a>
+            <a href="#builder" className="hover:opacity-40 transition-opacity" data-cursor="link">Packages</a>
             <a href="#contact" className="hover:opacity-40 transition-opacity" data-cursor="link">Inquire</a>
           </div>
           <div className="flex items-center space-x-4 md:space-x-6">
@@ -164,6 +166,7 @@ export default function Home() {
             { href: "#work", label: "Portfolio" },
             { href: "#about", label: "Philosophy" },
             { href: "#services", label: "Services" },
+            { href: "#builder", label: "Packages" },
             { href: "#testimonials", label: "Couples" },
             { href: "#contact", label: "Inquire" },
           ].map((l, i) => (
@@ -577,6 +580,9 @@ export default function Home() {
       <UrgencyStrip />
 
       <Packages />
+
+      {/* Package Builder — pick services, build a custom quote live */}
+      <PackageBuilder />
 
       {/* Testimonials — photo-backed */}
       <section id="testimonials" className="py-16 md:py-24 px-3 md:px-6 bg-[#F9F9EA]">
