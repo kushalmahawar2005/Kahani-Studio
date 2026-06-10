@@ -14,6 +14,7 @@ type Service = {
   desc: string;
   price: number;
   emoji: string;
+  unit?: string;
 };
 
 type Group = { group: string; items: Service[] };
@@ -23,32 +24,28 @@ const CATALOG: Group[] = [
   {
     group: "Coverage",
     items: [
-      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 45000, emoji: "📸" },
-      { id: "trad-photo", name: "Traditional Photography", desc: "Classic posed & ceremony coverage", price: 30000, emoji: "🪔" },
-      { id: "second-shooter", name: "Second Photographer", desc: "Two angles, never a missed moment", price: 18000, emoji: "👥" },
+      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 10000, emoji: "📸", unit: "2 days" },
+      { id: "trad-photo", name: "Traditional Photography", desc: "Classic posed & ceremony coverage", price: 10000, emoji: "🪔", unit: "2 days" },
     ],
   },
   {
     group: "Films",
     items: [
-      { id: "cine-film", name: "Cinematic Highlight Film", desc: "8–10 min hand-graded wedding film", price: 55000, emoji: "🎬" },
-      { id: "trad-video", name: "Traditional Video", desc: "Full-length ceremony documentation", price: 35000, emoji: "🎥" },
-      { id: "teaser", name: "Same-Day Teaser", desc: "60-sec reel delivered the same night", price: 25000, emoji: "⚡" },
+      { id: "trad-video", name: "Traditional Videography", desc: "Full-length ceremony documentation", price: 10000, emoji: "🎥", unit: "2 days" },
+      { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬" },
+      { id: "wedding-reel", name: "Wedding Reel", desc: "Same-day reel delivered for socials", price: 8000, emoji: "📱" },
     ],
   },
   {
     group: "Add-ons",
     items: [
       { id: "drone", name: "Drone Coverage", desc: "Aerial cinematography & stills", price: 20000, emoji: "🚁" },
-      { id: "pre-wedding", name: "Pre-Wedding Shoot", desc: "Half-day styled portrait session", price: 40000, emoji: "💍" },
-      { id: "live-stream", name: "Live Streaming", desc: "HD stream for family worldwide", price: 15000, emoji: "📡" },
     ],
   },
   {
     group: "Albums & Prints",
     items: [
-      { id: "album", name: "Premium Album", desc: "30-sheet fine-art heirloom album", price: 22000, emoji: "📖" },
-      { id: "canvas", name: "Canvas Print Set", desc: "Set of 3 framed gallery canvases", price: 8000, emoji: "🖼️" },
+      { id: "album", name: "Album Design", desc: "Fine-art heirloom album design", price: 22000, emoji: "📖" },
     ],
   },
 ];
@@ -61,6 +58,10 @@ const inr = new Intl.NumberFormat("en-IN", {
   currency: "INR",
   maximumFractionDigits: 0,
 });
+
+/* Price label that appends a billing unit (e.g. "/ 2 days") where set. */
+const priceLabel = (s: Service) =>
+  `${inr.format(s.price)}${s.unit ? ` / ${s.unit}` : ""}`;
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -106,7 +107,7 @@ export default function PackageBuilder() {
     const lines = [
       "✨ My Custom Package — Kahani Clicks",
       "",
-      ...chosen.map((s) => `• ${s.name} — ${inr.format(s.price)}`),
+      ...chosen.map((s) => `• ${s.name} — ${priceLabel(s)}`),
       "",
       `Estimated total: ${inr.format(total)}`,
       "—",
@@ -242,7 +243,7 @@ export default function PackageBuilder() {
                             active ? "text-cream/60" : "text-zinc-400"
                           }`}
                         >
-                          from {inr.format(s.price)}
+                          from {priceLabel(s)}
                         </p>
                       </button>
                     );
@@ -315,7 +316,7 @@ export default function PackageBuilder() {
                               </span>
                               <span className="flex items-center gap-3 shrink-0">
                                 <span className="font-display">
-                                  {inr.format(s.price)}
+                                  {priceLabel(s)}
                                 </span>
                                 <button
                                   type="button"
