@@ -202,6 +202,11 @@ export default function Home() {
         <div className="absolute inset-x-0 top-0 h-[1px] bg-charcoal/5 mx-20" />
 
         <div className="w-full flex flex-col items-center justify-start text-center">
+          {/* SEO heading — read by search engines & screen readers; the
+              visual headline above is an image, so this carries the keywords. */}
+          <h1 className="sr-only">
+            Kahani Clicks — Wedding Photography &amp; Cinematography in Rajasthan
+          </h1>
           <div
             className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8 relative"
             style={{ position: "relative" }}
