@@ -97,6 +97,15 @@ body::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
+/* Hide scrollbar for horizontal carousels (e.g. Reels) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes slowFadeInUp {
   from {
     opacity: 0;

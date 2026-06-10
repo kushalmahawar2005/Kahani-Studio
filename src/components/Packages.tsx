@@ -9,49 +9,57 @@ const tiers = [
     name: "Barsana 🌸",
     tag: "Intimate ceremonies",
     img: "/r2.jpg",
-    price: "Custom Quote",
+    price: "Starting ₹50,000",
     duration: "1 day · solo cinematographer",
     bullets: [
       "Candid Photography Coverage",
+      "Traditional Photo & Video",
       "3–5 Minute Highlight Film",
-      "Traditional Ceremony Documentation",
-      "Professionally Color Graded Images",
-      "Online Gallery Access",
+      "Professionally Edited Images",
       "4 Week Delivery",
     ],
+    addOn: { label: "Add 1-Day Pre-Wedding Experience", price: "+ ₹30,000" },
   },
   {
     name: "Giriraj Ji ⛰️",
     tag: "Most chosen",
     featured: true,
     img: "/r1.jpg",
-    price: "Custom Quote",
+    price: "Starting ₹95,000",
     duration: "2 days · 2-person crew",
     bullets: [
       "Complete Wedding Coverage",
-      "8–10 Minute Cinematic Film",
-      "Pre-Wedding Portrait Session",
-      "Bride & Groom Storytelling Reels",
+      "Candid Photography",
+      "Traditional Photo & Video",
+      "Cinematic Videography",
       "Drone Coverage",
-      "Premium Album Design",
+      "Bride & Groom Storytelling Reels",
       "Priority Delivery",
     ],
+    addOn: { label: "Add 2-Day Pre-Wedding Experience", price: "+ ₹60,000" },
+    perks: ["🎟️ Complimentary Couple Entry Passes for Vrindavan Visit"],
   },
   {
     name: "Vrindavan ❤️",
     tag: "Grand multi-day weddings",
     img: "/r3.jpg",
-    price: "Custom Quote",
+    price: "Starting ₹1,61,000",
     duration: "3+ days · full crew",
     bullets: [
       "Multi-Day Wedding Documentation",
-      "Documentary Style Coverage",
-      "Feature-Length Wedding Film",
-      "Drone & Luxury Cinematography",
-      "Premium Wedding Album",
+      "Candid Photography",
+      "Traditional Photo & Video",
+      "Cinematic Videography",
+      "Drone Coverage",
+      "Wedding Story Coverage",
+      "Premium Album",
       "Same-Day Wedding Teaser",
-      "Destination Wedding Coverage",
-      "Worldwide Travel Available",
+      "Priority Delivery",
+    ],
+    addOn: { label: "Add 3-Day Pre-Wedding Experience", price: "+ ₹85,000" },
+    perks: [
+      "🎟️ Complimentary Couple Entry Passes for Vrindavan Visit",
+      "📸 Priority Photo Preview Within 72 Hours",
     ],
   },
 ];
@@ -74,7 +82,7 @@ export default function Packages() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        <div className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar -mx-3 px-3 py-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:py-0">
           {tiers.map((t, i) => (
             <motion.div
               key={t.name}
@@ -86,7 +94,7 @@ export default function Packages() {
                 delay: i * 0.12,
                 ease: [0.19, 1, 0.22, 1],
               }}
-              className={`group relative flex flex-col overflow-hidden ${
+              className={`group relative flex flex-col overflow-hidden shrink-0 w-[82%] sm:w-[55%] md:w-auto snap-center ${
                 t.featured
                   ? "bg-charcoal text-cream"
                   : "bg-[#fdfcf0] border border-charcoal/10"
@@ -175,6 +183,54 @@ export default function Packages() {
                 >
                   {t.price}
                 </p>
+
+                {t.addOn && (
+                  <div
+                    className={`mb-6 flex items-baseline justify-between gap-4 border-t pt-5 ${
+                      t.featured ? "border-cream/15" : "border-charcoal/10"
+                    }`}
+                  >
+                    <span
+                      className={`text-[11px] leading-snug ${
+                        t.featured ? "text-cream/70" : "text-zinc-500"
+                      }`}
+                    >
+                      🏞️ {t.addOn.label}
+                    </span>
+                    <span
+                      className={`shrink-0 text-sm font-display italic ${
+                        t.featured ? "text-cream" : "text-charcoal"
+                      }`}
+                    >
+                      {t.addOn.price}
+                    </span>
+                  </div>
+                )}
+
+                {t.perks && (
+                  <div className="mb-6">
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.4em] mb-3 ${
+                        t.featured ? "text-gold" : "text-gold"
+                      }`}
+                    >
+                      ✨ Exclusive Benefits
+                    </p>
+                    <ul className="space-y-2">
+                      {t.perks.map((p) => (
+                        <li
+                          key={p}
+                          className={`text-[11px] leading-snug ${
+                            t.featured ? "text-cream/80" : "text-zinc-600"
+                          }`}
+                        >
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <Magnetic>
                   <a
                     href="#contact"

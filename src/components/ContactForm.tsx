@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const eventTypes = ["Wedding", "Pre-Wedding", "Portrait", "Editorial", "Other"];
 const budgets = ["₹50k - ₹2 L", "₹2 – 5 L", "₹5 – 10 L", "10 L +"];
 
-const FALLBACK_EMAIL = "J.k.sankhla123@gmail.com";
+const WHATSAPP_NUMBER = "919610240176";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -29,8 +29,10 @@ const EMPTY: FormState = {
   hp: "",
 };
 
-function buildMailto(form: FormState) {
+function buildWhatsApp(form: FormState) {
   const lines = [
+    "New Inquiry — Kahani Clicks",
+    "",
     `Name: ${form.name}`,
     `Email: ${form.email}`,
     form.event && `Event: ${form.event}`,
@@ -39,11 +41,8 @@ function buildMailto(form: FormState) {
     "",
     form.message,
   ].filter(Boolean);
-  const body = encodeURIComponent(lines.join("\n"));
-  const subject = encodeURIComponent(
-    `Inquiry from ${form.name}${form.event ? ` · ${form.event}` : ""}`
-  );
-  return `mailto:${FALLBACK_EMAIL}?subject=${subject}&body=${body}`;
+  const text = encodeURIComponent(lines.join("\n"));
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
 }
 
 export default function ContactForm() {
@@ -54,43 +53,25 @@ export default function ContactForm() {
   const update = (k: keyof FormState, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (status === "sending") return;
-    setStatus("sending");
-    setErrorMsg("");
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data: { ok?: boolean; error?: string; code?: string } = await res
-        .json()
-        .catch(() => ({}));
-
-      if (res.status === 503 && data.code === "not_configured") {
-        /* Backend not wired yet — fall back to user's mail client. */
-        window.location.href = buildMailto(form);
-        setStatus("sent");
-        return;
-      }
-
-      if (!res.ok || !data.ok) {
-        setStatus("error");
-        setErrorMsg(
-          data.error || "Something went wrong. Please try email or WhatsApp."
-        );
-        return;
-      }
-
+    if (form.hp) {
+      /* Honeypot tripped — silently pretend success. */
       setStatus("sent");
-      setForm(EMPTY);
-    } catch {
-      setStatus("error");
-      setErrorMsg("Network error. Please check your connection and try again.");
+      return;
     }
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setStatus("error");
+      setErrorMsg("Please fill in your name, email and message.");
+      return;
+    }
+
+    /* Open WhatsApp with the inquiry pre-filled. */
+    window.open(buildWhatsApp(form), "_blank", "noopener,noreferrer");
+    setStatus("sent");
+    setForm(EMPTY);
   };
 
   return (
@@ -112,9 +93,10 @@ export default function ContactForm() {
               Thank you, <span className="italic font-light">truly.</span>
             </h3>
             <p className="text-sm leading-relaxed text-zinc-500 max-w-md">
-              Your note is on its way to the studio. We&rsquo;ll respond within
-              24 hours — usually sooner. Until then, feel free to wander
-              through the work.
+              WhatsApp has opened with your inquiry ready to send — just hit
+              send and we&rsquo;ll take it from there. We respond within 24
+              hours, usually sooner. If nothing opened, message us directly at
+              +91 96102 40176.
             </p>
             <button
               type="button"

@@ -11,6 +11,8 @@ import AboutSection from "@/components/AboutSection";
 import Showreel from "@/components/Showreel";
 import Packages from "@/components/Packages";
 import PackageBuilder from "@/components/PackageBuilder";
+import Choreography from "@/components/Choreography";
+import Reels from "@/components/Reels";
 import ScrollStack, { ScrollStackImageCard } from "@/components/ScrollStack";
 import Stats from "@/components/Stats";
 import InstagramGrid from "@/components/InstagramGrid";
@@ -104,7 +106,7 @@ export default function Home() {
   }, [menuOpen]);
 
   return (
-    <main className="relative bg-[#F9F9EA] text-[#1a1a1a] selection:bg-charcoal selection:text-cream overflow-x-hidden">
+    <main className="relative bg-[#F9F9EA] text-[#1a1a1a] selection:bg-charcoal selection:text-cream overflow-x-clip">
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full glass-light px-6 py-5 md:px-12 md:py-6">
         <div className="mx-auto flex max-w-[1800px] items-center justify-between">
@@ -115,7 +117,9 @@ export default function Home() {
             <a href="#work" className="hover:opacity-40 transition-opacity" data-cursor="link">Portfolio</a>
             <a href="#about" className="hover:opacity-40 transition-opacity" data-cursor="link">Philosophy</a>
             <a href="#services" className="hover:opacity-40 transition-opacity" data-cursor="link">Services</a>
+            <a href="#reels" className="hover:opacity-40 transition-opacity" data-cursor="link">Reels</a>
             <a href="#builder" className="hover:opacity-40 transition-opacity" data-cursor="link">Packages</a>
+            <a href="#choreography" className="hover:opacity-40 transition-opacity" data-cursor="link">Choreography</a>
             <a href="#contact" className="hover:opacity-40 transition-opacity" data-cursor="link">Inquire</a>
           </div>
           <div className="flex items-center space-x-4 md:space-x-6">
@@ -166,7 +170,9 @@ export default function Home() {
             { href: "#work", label: "Portfolio" },
             { href: "#about", label: "Philosophy" },
             { href: "#services", label: "Services" },
+            { href: "#reels", label: "Reels" },
             { href: "#builder", label: "Packages" },
+            { href: "#choreography", label: "Choreography" },
             { href: "#testimonials", label: "Couples" },
             { href: "#contact", label: "Inquire" },
           ].map((l, i) => (
@@ -461,6 +467,9 @@ export default function Home() {
 
       <Showreel />
 
+      {/* Reels — portrait video highlights, horizontal scroll */}
+      <Reels />
+
       <FullBleed
         src="/r2.mp4"
         caption="A frame is forever."
@@ -583,6 +592,9 @@ export default function Home() {
 
       {/* Package Builder — pick services, build a custom quote live */}
       <PackageBuilder />
+
+      {/* Wedding Choreography Packages */}
+      <Choreography />
 
       {/* Testimonials — photo-backed */}
       <section id="testimonials" className="py-16 md:py-24 px-3 md:px-6 bg-[#F9F9EA]">

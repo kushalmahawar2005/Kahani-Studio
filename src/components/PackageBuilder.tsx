@@ -200,7 +200,7 @@ export default function PackageBuilder() {
                     {g.items.length}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
                   {g.items.map((s) => {
                     const active = selected.has(s.id);
                     return (
@@ -209,16 +209,16 @@ export default function PackageBuilder() {
                         type="button"
                         onClick={() => toggle(s.id)}
                         data-cursor="link"
-                        className={`group relative text-left p-5 md:p-6 rounded-2xl border transition-all duration-300 ${
+                        className={`group relative flex flex-col text-left p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl border transition-all duration-300 ${
                           active
                             ? "bg-charcoal text-cream border-charcoal shadow-lg"
                             : "bg-[#fdfcf0] border-charcoal/10 hover:border-charcoal/40"
                         }`}
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <span className="text-2xl leading-none">{s.emoji}</span>
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-xl sm:text-2xl leading-none">{s.emoji}</span>
                           <span
-                            className={`flex items-center justify-center w-6 h-6 rounded-full border text-sm shrink-0 transition-all ${
+                            className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full border text-xs sm:text-sm shrink-0 transition-all ${
                               active
                                 ? "bg-gold border-gold text-charcoal"
                                 : "border-charcoal/20 text-transparent group-hover:border-charcoal/50"
@@ -227,18 +227,18 @@ export default function PackageBuilder() {
                             ✓
                           </span>
                         </div>
-                        <h5 className="mt-4 text-lg font-display tracking-tight">
+                        <h5 className="mt-3 md:mt-4 text-sm sm:text-base md:text-lg font-display tracking-tight leading-tight">
                           {s.name}
                         </h5>
                         <p
-                          className={`mt-1 text-xs leading-relaxed ${
+                          className={`mt-1 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none ${
                             active ? "text-cream/70" : "text-zinc-500"
                           }`}
                         >
                           {s.desc}
                         </p>
                         <p
-                          className={`mt-4 text-[10px] font-bold uppercase tracking-[0.3em] ${
+                          className={`mt-3 md:mt-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] ${
                             active ? "text-cream/60" : "text-zinc-400"
                           }`}
                         >
@@ -253,8 +253,8 @@ export default function PackageBuilder() {
           </div>
 
           {/* ── Live package summary ── */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
-            <div className="border-2 border-black rounded-2xl p-6 sm:p-8 md:p-10 bg-[#fdfcf0] lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+          <div className="lg:col-span-5 lg:sticky lg:top-[100px] lg:self-start">
+            <div className="border-2 border-black rounded-2xl p-6 sm:p-8 md:p-10 bg-[#fdfcf0] lg:flex lg:flex-col lg:max-h-[calc(100vh_-_120px)] lg:overflow-hidden">
               <AnimatePresence mode="wait">
                 {status === "sent" ? (
                   <motion.div
@@ -285,11 +285,12 @@ export default function PackageBuilder() {
                     </button>
                   </motion.div>
                 ) : (
-                  <motion.div key="builder" initial={false}>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 block mb-6">
+                  <motion.div key="builder" initial={false} className="lg:flex lg:flex-col lg:flex-1 lg:min-h-0">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 block mb-6 lg:shrink-0">
                       Your package
                     </span>
 
+                    <div className="lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
                     {chosen.length === 0 ? (
                       <p className="text-sm text-zinc-400 italic py-4">
                         Select services on the left and they&rsquo;ll appear here
@@ -331,7 +332,9 @@ export default function PackageBuilder() {
                         </AnimatePresence>
                       </ul>
                     )}
+                    </div>
 
+                    <div className="lg:shrink-0">
                     <div className="flex items-baseline justify-between border-t-2 border-black pt-5 mb-2">
                       <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400">
                         Estimated total
@@ -447,6 +450,7 @@ export default function PackageBuilder() {
                           Add at least one service, your name & email.
                         </p>
                       )}
+                    </div>
                     </div>
                   </motion.div>
                 )}
