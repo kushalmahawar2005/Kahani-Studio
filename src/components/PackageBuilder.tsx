@@ -24,7 +24,7 @@ const CATALOG: Group[] = [
   {
     group: "Coverage",
     items: [
-      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 10000, emoji: "📸", unit: "2 days" },
+      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 10000, emoji: "📸", unit: "1 day" },
       { id: "trad-photo", name: "Traditional Photography", desc: "Classic posed & ceremony coverage", price: 10000, emoji: "🪔", unit: "2 days" },
     ],
   },
@@ -32,14 +32,14 @@ const CATALOG: Group[] = [
     group: "Films",
     items: [
       { id: "trad-video", name: "Traditional Videography", desc: "Full-length ceremony documentation", price: 10000, emoji: "🎥", unit: "2 days" },
-      { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬" },
+      { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬", unit: "1 day" },
       { id: "wedding-reel", name: "Wedding Reel", desc: "Same-day reel delivered for socials", price: 8000, emoji: "📱" },
     ],
   },
   {
     group: "Add-ons",
     items: [
-      { id: "drone", name: "Drone Coverage", desc: "Aerial cinematography & stills", price: 20000, emoji: "🚁" },
+      { id: "drone", name: "Drone Coverage", desc: "Aerial cinematography & stills", price: 7000, emoji: "🚁", unit: "1 day" },
     ],
   },
   {
