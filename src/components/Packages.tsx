@@ -42,7 +42,7 @@ const tiers = [
   {
     name: "Vrindavan ❤️",
     tag: "Grand multi-day weddings",
-    img: "/r3.jpg",
+    img: "/r3.jpeg",
     price: "Starting ₹1,61,000",
     duration: "3+ days · full crew",
     bullets: [
