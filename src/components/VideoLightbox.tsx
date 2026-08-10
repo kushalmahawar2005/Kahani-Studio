@@ -101,7 +101,7 @@ export default function VideoLightbox({
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
-              className="relative h-full max-h-[80vh] aspect-[9/16]"
+              className="group relative h-full max-h-[80vh] aspect-[9/16]"
             >
               <video
                 ref={videoRef}
@@ -116,7 +116,7 @@ export default function VideoLightbox({
                 type="button"
                 onClick={toggleMute}
                 aria-label={muted ? "Unmute video" : "Mute video"}
-                className="absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream"
+                className="absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 data-cursor="link"
               >
                 <span className="text-sm">{muted ? "🔇" : "🔊"}</span>

@@ -51,7 +51,7 @@ export default function FullBleed({
   };
 
   return (
-    <section ref={ref} className="relative w-full h-[85vh] md:h-[100svh] overflow-hidden">
+    <section ref={ref} className="group relative w-full h-[85vh] md:h-[100svh] overflow-hidden">
       <motion.div style={{ y }} className="absolute -inset-[8%]">
         {isVideo ? (
           <video
@@ -78,7 +78,7 @@ export default function FullBleed({
           type="button"
           onClick={toggleMute}
           aria-label={muted ? "Unmute video" : "Mute video"}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           data-cursor="link"
         >
           <span className="text-sm">{muted ? "🔇" : "🔊"}</span>
