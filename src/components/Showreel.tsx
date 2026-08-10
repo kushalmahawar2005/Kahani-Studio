@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { Volume2, VolumeX } from "lucide-react";
 import Reveal from "./Reveal";
 import { useMedia } from "@/components/MediaProvider";
 
@@ -86,7 +87,7 @@ export default function Showreel() {
             className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             data-cursor="link"
           >
-            <span className="text-sm">{muted ? "🔇" : "🔊"}</span>
+            {muted ? <VolumeX size={16} strokeWidth={1.75} /> : <Volume2 size={16} strokeWidth={1.75} />}
           </button>
 
           <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-10 md:left-10 text-cream">

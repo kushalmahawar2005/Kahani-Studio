@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
+import { VolumeX } from "lucide-react";
 import Reveal from "./Reveal";
 import VideoLightbox from "./VideoLightbox";
 import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
@@ -155,7 +156,7 @@ function ReelCard({
 
       {/* Sound affordance — muted icon by default, hides on hover (sound on) */}
       <div className="absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream opacity-90 group-hover:opacity-0 transition-opacity duration-300">
-        <span className="text-sm">🔇</span>
+        <VolumeX size={16} strokeWidth={1.75} />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-cream">

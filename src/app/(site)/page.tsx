@@ -24,9 +24,10 @@ import LegacySection from "@/components/LegacySection";
 import Logo from "@/components/Logo";
 import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
+// Excludes 1000407545.jpg, 1000407549.jpg, CA9A1703.JPG and CA9A3856.JPG —
+// those four are already the Hero ScrollStack picks directly above, so
+// showing them again here read as repeated images.
 const galleryImages = [
-  { src: "1000407545.jpg", title: "Eternal Vows", category: "Wedding", year: "MMXXVI", span: "tall" },
-  { src: "1000407549.jpg", title: "First Look", category: "Wedding", year: "MMXXVI", span: "wide" },
   { src: "1000519122.jpg", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "square" },
   { src: "1000519168.jpg", title: "Cinematic Still", category: "Film", year: "MMXXV", span: "tall" },
   { src: "1000851634.jpg", title: "The Royal Entrance", category: "Event", year: "MMXXVI", span: "square" },
@@ -40,7 +41,6 @@ const galleryImages = [
   { src: "CA9A0451.JPG", title: "Bridal Gaze", category: "Portrait", year: "MMXXVI", span: "tall" },
   { src: "CA9A1518.JPG", title: "Henna Hour", category: "Ceremony", year: "MMXXVI", span: "square" },
   { src: "CA9A1588.JPG", title: "The Promise", category: "Wedding", year: "MMXXVI", span: "wide" },
-  { src: "CA9A1703.JPG", title: "Tender Light", category: "Portrait", year: "MMXXVI", span: "square" },
   { src: "CA9A2039.JPG", title: "Crown of Marigolds", category: "Ritual", year: "MMXXVI", span: "wide" },
   { src: "CA9A2048.JPG", title: "Sacred Threads", category: "Ceremony", year: "MMXXVI", span: "tall" },
   { src: "CA9A2577.JPG", title: "Twilight Embrace", category: "Pre-Wedding", year: "MMXXVI", span: "square" },
@@ -52,7 +52,6 @@ const galleryImages = [
   { src: "CA9A9996.JPG", title: "Velvet Dusk", category: "Wedding", year: "MMXXVI", span: "wide" },
   { src: "_MVS2232.JPG", title: "Heirloom", category: "Editorial", year: "MMXXVI", span: "tall" },
   { src: "b28f26484d0520cb6be6381f8ddd091c.jpg", title: "The Stage", category: "Decor", year: "MMXXVI", span: "wide" },
-  { src: "CA9A3856.JPG", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "tall" },
   { src: "1000928369.jpg", title: "The Ritual", category: "Ritual", year: "MMXXVI", span: "tall" },
 ];
 

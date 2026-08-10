@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 
 export default function FullBleed({
   src,
@@ -81,7 +82,7 @@ export default function FullBleed({
           className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           data-cursor="link"
         >
-          <span className="text-sm">{muted ? "🔇" : "🔊"}</span>
+          {muted ? <VolumeX size={16} strokeWidth={1.75} /> : <Volume2 size={16} strokeWidth={1.75} />}
         </button>
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
