@@ -22,40 +22,38 @@ import UrgencyStrip from "@/components/UrgencyStrip";
 import Newsletter from "@/components/Newsletter";
 import LegacySection from "@/components/LegacySection";
 import Logo from "@/components/Logo";
+import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
 const galleryImages = [
-  { src: "/1000407545.jpg", title: "Eternal Vows", category: "Wedding", year: "MMXXVI", span: "tall" },
-  { src: "/1000407549.jpg", title: "First Look", category: "Wedding", year: "MMXXVI", span: "wide" },
-  { src: "/1000519122.jpg", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "square" },
-  { src: "/1000519168.jpg", title: "Cinematic Still", category: "Film", year: "MMXXV", span: "tall" },
-  { src: "/1000851634.jpg", title: "The Royal Entrance", category: "Event", year: "MMXXVI", span: "square" },
-  { src: "/1000851638.jpg", title: "Sacred Moments", category: "Ritual", year: "MMXXV", span: "wide" },
-  { src: "/1000851652.jpg", title: "Desert Dreams", category: "Pre-Wedding", year: "MMXXVI", span: "tall" },
-  { src: "/1000927051.jpg", title: "Mehendi Whispers", category: "Ceremony", year: "MMXXVI", span: "square" },
-  { src: "/1000928359.jpg", title: "Joy, Captured", category: "Candid", year: "MMXXVI", span: "square" },
-  { src: "/1000928374.jpg", title: "Heritage", category: "Architecture", year: "MMXXV", span: "wide" },
-  { src: "/1000928376.jpg", title: "The Embrace", category: "Wedding", year: "MMXXVI", span: "square" },
-  { src: "/CA9A1701.JPG", title: "Quiet Light", category: "Editorial", year: "MMXXV", span: "tall" },
-  { src: "/CA9A0451.JPG", title: "Bridal Gaze", category: "Portrait", year: "MMXXVI", span: "tall" },
-  { src: "/CA9A1518.JPG", title: "Henna Hour", category: "Ceremony", year: "MMXXVI", span: "square" },
-  { src: "/CA9A1588.JPG", title: "The Promise", category: "Wedding", year: "MMXXVI", span: "wide" },
-  { src: "/CA9A1701.JPG", title: "Whispered Vows", category: "Candid", year: "MMXXVI", span: "tall" },
-  { src: "/CA9A1703.JPG", title: "Tender Light", category: "Portrait", year: "MMXXVI", span: "square" },
-  { src: "/CA9A2039.JPG", title: "Crown of Marigolds", category: "Ritual", year: "MMXXVI", span: "wide" },
-  { src: "/CA9A2048.JPG", title: "Sacred Threads", category: "Ceremony", year: "MMXXVI", span: "tall" },
-  { src: "/CA9A2577.JPG", title: "Twilight Embrace", category: "Pre-Wedding", year: "MMXXVI", span: "square" },
-  { src: "/CA9A2580.JPG", title: "Heirloom Hands", category: "Detail", year: "MMXXVI", span: "tall" },
-  { src: "/CA9A3213.JPG", title: "Stillness", category: "Editorial", year: "MMXXVI", span: "wide" },
-  { src: "/CA9A9580.JPG", title: "First Light", category: "Portrait", year: "MMXXVI", span: "square" },
-  { src: "/CA9A9689.JPG", title: "Procession", category: "Event", year: "MMXXVI", span: "tall" },
-  { src: "/CA9A9700.jpg", title: "Soft Reverie", category: "Candid", year: "MMXXVI", span: "square" },
-  { src: "/CA9A9996.JPG", title: "Velvet Dusk", category: "Wedding", year: "MMXXVI", span: "wide" },
-  { src: "/_MVS2232.JPG", title: "Heirloom", category: "Editorial", year: "MMXXVI", span: "tall" },
-  { src: "/b28f26484d0520cb6be6381f8ddd091c.jpg", title: "The Stage", category: "Decor", year: "MMXXVI", span: "wide" },
-  { src: "/CA9A3856.JPG", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "tall" },
-  { src: "/1000927051.jpg", title: "Festive Joy", category: "Ceremony", year: "MMXXVI", span: "square" },
-  { src: "/CA9A9700.jpg", title: "Soft Reverie", category: "Candid", year: "MMXXVI", span: "tall" },
-  { src: "/1000928369.jpg", title: "The Ritual", category: "Ritual", year: "MMXXVI", span: "tall" },
+  { src: "1000407545.jpg", title: "Eternal Vows", category: "Wedding", year: "MMXXVI", span: "tall" },
+  { src: "1000407549.jpg", title: "First Look", category: "Wedding", year: "MMXXVI", span: "wide" },
+  { src: "1000519122.jpg", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "square" },
+  { src: "1000519168.jpg", title: "Cinematic Still", category: "Film", year: "MMXXV", span: "tall" },
+  { src: "1000851634.jpg", title: "The Royal Entrance", category: "Event", year: "MMXXVI", span: "square" },
+  { src: "1000851638.jpg", title: "Sacred Moments", category: "Ritual", year: "MMXXV", span: "wide" },
+  { src: "1000851652.jpg", title: "Desert Dreams", category: "Pre-Wedding", year: "MMXXVI", span: "tall" },
+  { src: "1000927051.jpg", title: "Mehendi Whispers", category: "Ceremony", year: "MMXXVI", span: "square" },
+  { src: "1000928359.jpg", title: "Joy, Captured", category: "Candid", year: "MMXXVI", span: "square" },
+  { src: "1000928374.jpg", title: "Heritage", category: "Architecture", year: "MMXXV", span: "wide" },
+  { src: "1000928376.jpg", title: "The Embrace", category: "Wedding", year: "MMXXVI", span: "square" },
+  { src: "CA9A1701.JPG", title: "Quiet Light", category: "Editorial", year: "MMXXV", span: "tall" },
+  { src: "CA9A0451.JPG", title: "Bridal Gaze", category: "Portrait", year: "MMXXVI", span: "tall" },
+  { src: "CA9A1518.JPG", title: "Henna Hour", category: "Ceremony", year: "MMXXVI", span: "square" },
+  { src: "CA9A1588.JPG", title: "The Promise", category: "Wedding", year: "MMXXVI", span: "wide" },
+  { src: "CA9A1703.JPG", title: "Tender Light", category: "Portrait", year: "MMXXVI", span: "square" },
+  { src: "CA9A2039.JPG", title: "Crown of Marigolds", category: "Ritual", year: "MMXXVI", span: "wide" },
+  { src: "CA9A2048.JPG", title: "Sacred Threads", category: "Ceremony", year: "MMXXVI", span: "tall" },
+  { src: "CA9A2577.JPG", title: "Twilight Embrace", category: "Pre-Wedding", year: "MMXXVI", span: "square" },
+  { src: "CA9A2580.JPG", title: "Heirloom Hands", category: "Detail", year: "MMXXVI", span: "tall" },
+  { src: "CA9A3213.JPG", title: "Stillness", category: "Editorial", year: "MMXXVI", span: "wide" },
+  { src: "CA9A9580.JPG", title: "First Light", category: "Portrait", year: "MMXXVI", span: "square" },
+  { src: "CA9A9689.JPG", title: "Procession", category: "Event", year: "MMXXVI", span: "tall" },
+  { src: "CA9A9700.jpg", title: "Soft Reverie", category: "Candid", year: "MMXXVI", span: "square" },
+  { src: "CA9A9996.JPG", title: "Velvet Dusk", category: "Wedding", year: "MMXXVI", span: "wide" },
+  { src: "_MVS2232.JPG", title: "Heirloom", category: "Editorial", year: "MMXXVI", span: "tall" },
+  { src: "b28f26484d0520cb6be6381f8ddd091c.jpg", title: "The Stage", category: "Decor", year: "MMXXVI", span: "wide" },
+  { src: "CA9A3856.JPG", title: "Golden Hour", category: "Portrait", year: "MMXXVI", span: "tall" },
+  { src: "1000928369.jpg", title: "The Ritual", category: "Ritual", year: "MMXXVI", span: "tall" },
 ];
 
 const testimonials = [
@@ -63,19 +61,19 @@ const testimonials = [
     quote: "Pure poetry. They preserved the soul of every glance.",
     author: "Aanya & Vikram",
     location: "Udaipur, 2026",
-    img: "/1000407545.jpg",
+    img: "1000407545.jpg",
   },
   {
     quote: "Cinematic, intimate, fearless.",
     author: "Riya & Arjun",
     location: "Jaipur, 2025",
-    img: "/1000928369.jpg",
+    img: "1000928369.jpg",
   },
   {
     quote: "Every frame is a painting.",
     author: "Meera & Karan",
     location: "Jodhpur, 2024",
-    img: "/1000851634.jpg",
+    img: "1000851634.jpg",
   },
 ];
 
@@ -87,6 +85,7 @@ const journey = [
 ];
 
 export default function Home() {
+  const media = useMediaMap();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -220,7 +219,7 @@ export default function Home() {
               suppressHydrationWarning
             >
               <Image
-                src="/chakra.png"
+                src={resolveMedia(media, "chakra.png")}
                 alt=""
                 width={120}
                 height={120}
@@ -236,7 +235,7 @@ export default function Home() {
               suppressHydrationWarning
             >
               <Image
-                src="/branding_clean.png"
+                src={resolveMedia(media, "branding_clean.png")}
                 alt="Kahani Clicks"
                 width={800}
                 height={500}
@@ -252,7 +251,7 @@ export default function Home() {
               suppressHydrationWarning
             >
               <Image
-                src="/shankha.png"
+                src={resolveMedia(media, "shankha.png")}
                 alt=""
                 width={120}
                 height={120}
@@ -315,25 +314,25 @@ export default function Home() {
           {/* Hero ScrollStack — cinematic image cards */}
           <ScrollStack>
             <ScrollStackImageCard
-              src="/1000407545.jpg"
+              src={resolveMedia(media, "1000407545.jpg")}
               title="Eternal Vows"
               subtitle="Wedding · Udaipur"
               index={0}
             />
             <ScrollStackImageCard
-              src="/CA9A1703.JPG"
+              src={resolveMedia(media, "CA9A1703.JPG")}
               title="Sacred Moments"
               subtitle="Ritual · Jaipur"
               index={1}
             />
             <ScrollStackImageCard
-              src="/1000407549.jpg"
+              src={resolveMedia(media, "1000407549.jpg")}
               title="The Embrace"
               subtitle="Candid · Jodhpur"
               index={2}
             />
             <ScrollStackImageCard
-              src="/CA9A3856.JPG"
+              src={resolveMedia(media, "CA9A3856.JPG")}
               title="Golden Hour"
               subtitle="Portrait · Bikaner"
               index={3}
@@ -378,26 +377,26 @@ export default function Home() {
               }}
             >
               {[
-                "/1000407549.jpg",
-                "/1000928376.jpg",
-                "/CA9A1703.JPG",
-                "/1000851638.jpg",
-                "/CA9A3856.JPG",
-                "/1000407545.jpg",
+                "1000407549.jpg",
+                "1000928376.jpg",
+                "CA9A1703.JPG",
+                "1000851638.jpg",
+                "CA9A3856.JPG",
+                "1000407545.jpg",
                 // Duplicate exactly 6 times for seamless infinite loop
-                "/1000407549.jpg",
-                "/1000928376.jpg",
-                "/CA9A1703.JPG",
-                "/1000851638.jpg",
-                "/CA9A3856.JPG",
-                "/1000407545.jpg",
+                "1000407549.jpg",
+                "1000928376.jpg",
+                "CA9A1703.JPG",
+                "1000851638.jpg",
+                "CA9A3856.JPG",
+                "1000407545.jpg",
               ].map((src, i) => (
                 <div
                   key={i}
                   className="relative shrink-0 w-[75vw] sm:w-[350px] md:w-[400px] h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden"
                 >
                   <Image
-                    src={src}
+                    src={resolveMedia(media, src)}
                     alt=""
                     fill
                     sizes="(max-width: 768px) 75vw, 400px"
@@ -447,7 +446,7 @@ export default function Home() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={img.src}
+                  src={resolveMedia(media, img.src)}
                   alt={img.title}
                   loading="lazy"
                   decoding="async"
@@ -476,7 +475,7 @@ export default function Home() {
       <Reels />
 
       <FullBleed
-        src="/r2.mp4"
+        src={resolveMedia(media, "r2.mp4")}
         caption="A frame is forever."
         meta="No.IV · Editorial"
       />
@@ -489,7 +488,7 @@ export default function Home() {
         <div className="w-full h-full relative overflow-hidden border border-charcoal/10">
           <motion.div style={{ y: legacyY }} className="absolute -inset-[10%]">
             <Image
-              src="/1000928374.jpg"
+              src={resolveMedia(media, "1000928374.jpg")}
               alt=""
               fill
               className="object-cover brightness-[0.7]"
@@ -550,9 +549,9 @@ export default function Home() {
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3">
             {[
-              { title: "Wedding Cinema", img: "/1000407545.jpg", num: "01" },
-              { title: "Editorial Portraits", img: "/1000519122.jpg", num: "02" },
-              { title: "Film Production", img: "/1000519168.jpg", num: "03" },
+              { title: "Wedding Cinema", img: "1000407545.jpg", num: "01" },
+              { title: "Editorial Portraits", img: "1000519122.jpg", num: "02" },
+              { title: "Film Production", img: "1000519168.jpg", num: "03" },
             ].map((s, i) => (
               <motion.div
                 key={s.title}
@@ -564,7 +563,7 @@ export default function Home() {
                 data-cursor="view"
               >
                 <Image
-                  src={s.img}
+                  src={resolveMedia(media, s.img)}
                   alt={s.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -586,7 +585,7 @@ export default function Home() {
       </section>
 
       <FullBleed
-        src="/CA9A3213.JPG"
+        src={resolveMedia(media, "CA9A3213.JPG")}
         caption="Cinema, in stillness."
         meta="No.VI · Selected"
       />
@@ -620,7 +619,7 @@ export default function Home() {
                 className="relative aspect-[4/5] overflow-hidden group"
               >
                 <Image
-                  src={t.img}
+                  src={resolveMedia(media, t.img)}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -780,7 +779,7 @@ export default function Home() {
       </footer>
 
       <Lightbox
-        items={galleryImages}
+        items={galleryImages.map((g) => ({ ...g, src: resolveMedia(media, g.src) }))}
         index={lightboxIndex}
         onClose={() => setLightboxIndex(null)}
         onNav={(n) => setLightboxIndex(n)}

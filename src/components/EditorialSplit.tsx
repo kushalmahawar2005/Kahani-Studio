@@ -2,15 +2,17 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
 const stories = [
-  { src: "/1000928369.jpg", caption: "Vasundhara × Aryan", place: "Udaipur · MMXXVI" },
-  { src: "/1000851634.jpg", caption: "The Royal Affair", place: "Jaipur · MMXXVI" },
-  { src: "/1000928359.jpg", caption: "Mehendi Whispers", place: "Jodhpur · MMXXV" },
-  { src: "/1000407545.jpg", caption: "Eternal Vows", place: "Bikaner · MMXXVI" },
+  { src: "1000928369.jpg", caption: "Vasundhara × Aryan", place: "Udaipur · MMXXVI" },
+  { src: "1000851634.jpg", caption: "The Royal Affair", place: "Jaipur · MMXXVI" },
+  { src: "1000928359.jpg", caption: "Mehendi Whispers", place: "Jodhpur · MMXXV" },
+  { src: "1000407545.jpg", caption: "Eternal Vows", place: "Bikaner · MMXXVI" },
 ];
 
 export default function EditorialSplit() {
+  const media = useMediaMap();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -36,7 +38,7 @@ export default function EditorialSplit() {
             >
               <motion.div style={{ y: offset }} className="absolute -inset-[5%]">
                 <Image
-                  src={s.src}
+                  src={resolveMedia(media, s.src)}
                   alt={s.caption}
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"

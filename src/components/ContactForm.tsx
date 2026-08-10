@@ -12,6 +12,7 @@ type Status = "idle" | "sending" | "sent" | "error";
 type FormState = {
   name: string;
   email: string;
+  phone: string;
   event: string;
   date: string;
   budget: string;
@@ -22,6 +23,7 @@ type FormState = {
 const EMPTY: FormState = {
   name: "",
   email: "",
+  phone: "",
   event: "",
   date: "",
   budget: "",
@@ -29,12 +31,22 @@ const EMPTY: FormState = {
   hp: "",
 };
 
-function buildWhatsApp(form: FormState) {
+/* Normalizes an Indian phone number into wa.me's expected digits-only,
+   country-code-prefixed format. */
+function normalizePhone(raw: string) {
+  let digits = raw.replace(/\D/g, "");
+  if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+  if (digits.length === 10) digits = `91${digits}`;
+  return digits;
+}
+
+function buildAdminWhatsApp(form: FormState) {
   const lines = [
     "New Inquiry — Kahani Clicks",
     "",
     `Name: ${form.name}`,
     `Email: ${form.email}`,
+    `Phone: ${form.phone}`,
     form.event && `Event: ${form.event}`,
     form.date && `Date: ${form.date}`,
     form.budget && `Budget: ${form.budget}`,
@@ -43,6 +55,23 @@ function buildWhatsApp(form: FormState) {
   ].filter(Boolean);
   const text = encodeURIComponent(lines.join("\n"));
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+}
+
+function buildUserConfirmation(form: FormState) {
+  const lines = [
+    "✨ Kahani Clicks — Inquiry confirmation",
+    "",
+    `Hi ${form.name}, this is a copy of the inquiry you just sent us.`,
+    form.event && `Event: ${form.event}`,
+    form.date && `Date: ${form.date}`,
+    form.budget && `Budget: ${form.budget}`,
+    "",
+    form.message,
+    "",
+    "We'll respond within 24 hours. — Kahani Clicks",
+  ].filter(Boolean);
+  const text = encodeURIComponent(lines.join("\n"));
+  return `https://wa.me/${normalizePhone(form.phone)}?text=${text}`;
 }
 
 export default function ContactForm() {
@@ -67,9 +96,16 @@ export default function ContactForm() {
       setErrorMsg("Please fill in your name, email and message.");
       return;
     }
+    if (normalizePhone(form.phone).length < 10) {
+      setStatus("error");
+      setErrorMsg("Please enter a valid WhatsApp number.");
+      return;
+    }
 
-    /* Open WhatsApp with the inquiry pre-filled. */
-    window.open(buildWhatsApp(form), "_blank", "noopener,noreferrer");
+    /* Open WhatsApp with the inquiry pre-filled for the studio, and a
+       confirmation copy pre-filled for the inquirer to send to themselves. */
+    window.open(buildAdminWhatsApp(form), "_blank", "noopener,noreferrer");
+    window.open(buildUserConfirmation(form), "_blank", "noopener,noreferrer");
     setStatus("sent");
     setForm(EMPTY);
   };
@@ -93,9 +129,10 @@ export default function ContactForm() {
               Thank you, <span className="italic font-light">truly.</span>
             </h3>
             <p className="text-sm leading-relaxed text-zinc-500 max-w-md">
-              WhatsApp has opened with your inquiry ready to send — just hit
-              send and we&rsquo;ll take it from there. We respond within 24
-              hours, usually sooner. If nothing opened, message us directly at
+              Two WhatsApp tabs have opened — one to the studio with your
+              inquiry, one to you with a confirmation copy. Just hit send on
+              each. We respond within 24 hours, usually sooner. If a tab was
+              blocked, allow pop-ups and try again, or message us directly at
               +91 96102 40176.
             </p>
             <button
@@ -129,6 +166,14 @@ export default function ContactForm() {
               onChange={(v) => update("email", v)}
               required
               autoComplete="email"
+            />
+            <Field
+              label="WhatsApp number"
+              type="tel"
+              value={form.phone}
+              onChange={(v) => update("phone", v)}
+              required
+              autoComplete="tel"
             />
 
             <div className="md:col-span-2">

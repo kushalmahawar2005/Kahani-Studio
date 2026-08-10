@@ -33,7 +33,7 @@ const CATALOG: Group[] = [
     items: [
       { id: "trad-video", name: "Traditional Videography", desc: "Full-length ceremony documentation", price: 10000, emoji: "🎥", unit: "2 days" },
       { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬", unit: "1 day" },
-      { id: "wedding-reel", name: "Wedding Reel", desc: "Full-wedding reel delivered for socials", price: 20000, emoji: "📱" },
+      { id: "wedding-reel", name: "Wedding Reel", desc: "Full-wedding reel delivered for socials", price: 25000, emoji: "📱" },
     ],
   },
   {

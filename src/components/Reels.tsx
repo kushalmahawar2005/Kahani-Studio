@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import Reveal from "./Reveal";
+import VideoLightbox from "./VideoLightbox";
+import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
 const INSTAGRAM =
   "https://www.instagram.com/kahani_click?utm_source=qr&igsh=MmY0eG51NHppbmZj";
@@ -16,14 +18,22 @@ type Reel = {
 
 /* Portrait reels — video plays on hover (desktop) or in-view (touch). */
 const REELS: Reel[] = [
-  { id: "vows", title: "Eternal Vows", tag: "Wedding Film", src: "/s1.mp4", poster: "/1000407545.jpg" },
-  { id: "rituals", title: "Sacred Rituals", tag: "Ceremony", src: "/r2.mp4", poster: "/CA9A1703.JPG" },
-  { id: "joy", title: "Candid Joy", tag: "Highlights", src: "/s2.mp4", poster: "/1000928369.jpg" },
-  { id: "golden", title: "Golden Hour", tag: "Pre-Wedding", src: "/s2.mp4", poster: "/CA9A3856.JPG" },
-  { id: "embrace", title: "The Embrace", tag: "Teaser", src: "/r1.mp4", poster: "/1000407549.jpg" },
+  { id: "vows", title: "Eternal Vows", tag: "Wedding Film", src: "s1.mp4", poster: "1000407545.jpg" },
+  { id: "rituals", title: "Sacred Rituals", tag: "Ceremony", src: "r2.mp4", poster: "CA9A1703.JPG" },
+  { id: "joy", title: "Candid Joy", tag: "Highlights", src: "s2.mp4", poster: "1000928369.jpg" },
+  { id: "golden", title: "Golden Hour", tag: "Pre-Wedding", src: "s2.mp4", poster: "CA9A3856.JPG" },
+  { id: "embrace", title: "The Embrace", tag: "Teaser", src: "r1.mp4", poster: "1000407549.jpg" },
 ];
 
 export default function Reels() {
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const media = useMediaMap();
+  const resolvedReels = REELS.map((r) => ({
+    ...r,
+    src: resolveMedia(media, r.src),
+    poster: resolveMedia(media, r.poster),
+  }));
+
   return (
     <section id="reels" className="py-20 md:py-32 bg-[#F9F9EA] border-y border-charcoal/5">
       <div className="mx-auto max-w-[1800px] px-6 md:px-12">
@@ -56,17 +66,37 @@ export default function Reels() {
         <div className="pointer-events-none absolute inset-y-0 right-0 w-6 md:w-16 bg-gradient-to-l from-[#F9F9EA] to-transparent z-10" />
 
         <div className="flex gap-3 md:gap-5 overflow-x-auto snap-x snap-mandatory px-6 md:px-12 pb-4 no-scrollbar">
-          {REELS.map((reel, i) => (
-            <ReelCard key={reel.id} reel={reel} index={i} />
+          {resolvedReels.map((reel, i) => (
+            <ReelCard
+              key={reel.id}
+              reel={reel}
+              index={i}
+              onOpen={() => setPreviewIndex(i)}
+            />
           ))}
         </div>
       </div>
+
+      <VideoLightbox
+        items={resolvedReels.map((r) => ({ src: r.src, title: r.title, tag: r.tag, poster: r.poster }))}
+        index={previewIndex}
+        onClose={() => setPreviewIndex(null)}
+        onNav={(n) => setPreviewIndex(n)}
+      />
     </section>
   );
 }
 
-function ReelCard({ reel, index }: { reel: Reel; index: number }) {
-  const wrapRef = useRef<HTMLAnchorElement>(null);
+function ReelCard({
+  reel,
+  index,
+  onOpen,
+}: {
+  reel: Reel;
+  index: number;
+  onOpen: () => void;
+}) {
+  const wrapRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canHover = useRef(false);
   /* Pause off-screen videos to save resources; resume when in view. */
@@ -98,16 +128,15 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
   };
 
   return (
-    <a
+    <button
+      type="button"
       ref={wrapRef}
-      href={INSTAGRAM}
-      target="_blank"
-      rel="noopener noreferrer"
+      onClick={onOpen}
       data-cursor="view"
       onMouseEnter={soundOn}
       onMouseLeave={soundOff}
       style={{ animationDelay: `${index * 60}ms` }}
-      className="group relative shrink-0 snap-center w-[68vw] sm:w-[300px] md:w-[340px] aspect-[9/16] overflow-hidden rounded-2xl bg-zinc-200 border border-charcoal/10"
+      className="group relative shrink-0 snap-center w-[68vw] sm:w-[300px] md:w-[340px] aspect-[9/16] overflow-hidden rounded-2xl bg-zinc-200 border border-charcoal/10 text-left"
     >
       <video
         ref={videoRef}
@@ -137,6 +166,6 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
           {reel.title}
         </h4>
       </div>
-    </a>
+    </button>
   );
 }

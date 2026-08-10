@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function FullBleed({
   src,
@@ -19,13 +19,14 @@ export default function FullBleed({
     offset: ["start end", "end start"],
   });
   const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
-  
+
   const isVideo = src.endsWith(".mp4") || src.endsWith(".webm");
   const isInView = useInView(ref, { margin: "-45% 0px -45% 0px" });
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     if (!isVideo || !videoRef.current) return;
-    
+
     if (isInView) {
       videoRef.current.muted = false;
       const playPromise = videoRef.current.play();
@@ -42,6 +43,13 @@ export default function FullBleed({
     }
   }, [isInView, isVideo]);
 
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    const next = !videoRef.current.muted;
+    videoRef.current.muted = next;
+    setMuted(next);
+  };
+
   return (
     <section ref={ref} className="relative w-full h-[85vh] md:h-[100svh] overflow-hidden">
       <motion.div style={{ y }} className="absolute -inset-[8%]">
@@ -52,6 +60,7 @@ export default function FullBleed({
             loop
             playsInline
             muted
+            onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
@@ -64,6 +73,17 @@ export default function FullBleed({
           />
         )}
       </motion.div>
+      {isVideo && (
+        <button
+          type="button"
+          onClick={toggleMute}
+          aria-label={muted ? "Unmute video" : "Mute video"}
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream"
+          data-cursor="link"
+        >
+          <span className="text-sm">{muted ? "🔇" : "🔊"}</span>
+        </button>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
       {(caption || meta) && (
         <div className="absolute bottom-6 sm:bottom-8 md:bottom-14 left-4 sm:left-6 md:left-12 right-4 sm:right-6 md:right-12 flex justify-between items-end text-cream">

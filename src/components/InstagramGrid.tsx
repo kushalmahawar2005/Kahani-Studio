@@ -3,17 +3,19 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import Magnetic from "./Magnetic";
+import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
 const feed = [
-  "/CA9A0451.JPG",
-  "/CA9A1588.JPG",
-  "/CA9A2039.JPG",
-  "/CA9A2577.JPG",
-  "/CA9A9580.JPG",
-  "/CA9A9996.JPG",
+  "CA9A0451.JPG",
+  "CA9A1588.JPG",
+  "CA9A2039.JPG",
+  "CA9A2577.JPG",
+  "CA9A9580.JPG",
+  "CA9A9996.JPG",
 ];
 
 export default function InstagramGrid() {
+  const media = useMediaMap();
   return (
     <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-12 bg-[#F9F9EA] border-t border-charcoal/5">
       <div className="mx-auto max-w-[1800px]">
@@ -63,7 +65,7 @@ export default function InstagramGrid() {
               data-cursor="view"
             >
               <Image
-                src={src}
+                src={resolveMedia(media, src)}
                 alt="Instagram post"
                 fill
                 sizes="(max-width: 768px) 50vw, 16vw"

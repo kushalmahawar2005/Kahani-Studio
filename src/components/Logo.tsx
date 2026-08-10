@@ -1,14 +1,17 @@
+"use client";
 import React from "react";
 import Image from "next/image";
+import { useMedia } from "@/components/MediaProvider";
 
 export default function Logo({ className = "", iconSize = 28 }: { className?: string, iconSize?: number }) {
   // Use iconSize to derive a clean responsive height for the artwork
   const imgHeight = iconSize * 1.4;
+  const logoSrc = useMedia("branding_clean.png");
 
   return (
     <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
-      <Image 
-        src="/branding_clean.png" 
+      <Image
+        src={logoSrc}
         alt="Kahani Clicks" 
         width={150} 
         height={150} 

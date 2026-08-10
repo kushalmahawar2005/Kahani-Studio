@@ -1,9 +1,11 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import Reveal from "./Reveal";
+import { useMedia } from "@/components/MediaProvider";
 
 export default function Showreel() {
+  const videoSrc = useMedia("r1.mov");
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({
@@ -12,6 +14,7 @@ export default function Showreel() {
   });
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1.02, 1.06]);
   const isInView = useInView(ref, { margin: "-40% 0px -40% 0px" });
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -31,6 +34,13 @@ export default function Showreel() {
       videoRef.current.pause();
     }
   }, [isInView]);
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    const next = !videoRef.current.muted;
+    videoRef.current.muted = next;
+    setMuted(next);
+  };
 
   return (
     <section ref={ref} className="relative py-24 md:py-40 px-6 md:px-12 bg-[#F9F9EA]">
@@ -59,14 +69,25 @@ export default function Showreel() {
             <div className="aspect-[9/16] sm:aspect-[4/5] md:aspect-[21/9] relative">
               <video
                 ref={videoRef}
-                src="/r1.mov"
+                src={videoSrc}
                 loop
                 playsInline
                 muted
+                onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           </motion.div>
+
+          <button
+            type="button"
+            onClick={toggleMute}
+            aria-label={muted ? "Unmute video" : "Mute video"}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-cream"
+            data-cursor="link"
+          >
+            <span className="text-sm">{muted ? "🔇" : "🔊"}</span>
+          </button>
 
           <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-10 md:left-10 text-cream">
             <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] opacity-70">

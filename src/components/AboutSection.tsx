@@ -1,15 +1,17 @@
 "use client";
 import Image from "next/image";
 import Reveal from "./Reveal";
+import { useMedia } from "@/components/MediaProvider";
 
 export default function AboutSection() {
+  const founderSrc = useMedia("1000928369.jpg");
   return (
     <section className="py-16 sm:py-24 md:py-40 px-4 sm:px-6 md:px-12 bg-[#fdfcf0] border-y border-charcoal/5">
       <div className="mx-auto max-w-[1400px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
         <Reveal className="lg:col-span-5">
           <div className="relative aspect-[3/4] overflow-hidden bg-zinc-100">
             <Image
-              src="/1000928369.jpg"
+              src={founderSrc}
               alt="J.K. Sankhla — Founder, Kahani Clicks"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"

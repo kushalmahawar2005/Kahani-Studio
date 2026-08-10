@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Reveal from "./Reveal";
 import Magnetic from "./Magnetic";
+import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
 
 const tiers = [
   {
     name: "Barsana 🌸",
     tag: "Intimate ceremonies",
-    img: "/r2.jpg",
+    img: "r2.jpg",
     price: "Starting ₹50,000",
     duration: "1 day · solo cinematographer",
     bullets: [
@@ -24,7 +25,7 @@ const tiers = [
     name: "Giriraj Ji ⛰️",
     tag: "Most chosen",
     featured: true,
-    img: "/r1.jpg",
+    img: "r1.jpg",
     price: "Starting ₹95,000",
     duration: "2 days · 2-person crew",
     bullets: [
@@ -42,7 +43,7 @@ const tiers = [
   {
     name: "Vrindavan ❤️",
     tag: "Grand multi-day weddings",
-    img: "/r3.jpeg",
+    img: "r3.jpeg",
     price: "Starting ₹1,61,000",
     duration: "3+ days · full crew",
     bullets: [
@@ -65,6 +66,7 @@ const tiers = [
 ];
 
 export default function Packages() {
+  const media = useMediaMap();
   return (
     <section id="invest" className="py-16 sm:py-24 md:py-40 px-3 sm:px-6 md:px-12 bg-[#F9F9EA]">
       <div className="mx-auto max-w-[1600px]">
@@ -82,7 +84,7 @@ export default function Packages() {
           </div>
         </Reveal>
 
-        <div className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar -mx-3 px-3 py-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:py-0">
+        <div className="flex items-start md:items-stretch md:grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar -mx-3 px-3 py-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:py-0">
           {tiers.map((t, i) => (
             <motion.div
               key={t.name}
@@ -110,7 +112,7 @@ export default function Packages() {
 
               <div className="relative w-full aspect-[16/10] overflow-hidden">
                 <Image
-                  src={t.img}
+                  src={resolveMedia(media, t.img)}
                   alt={t.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"

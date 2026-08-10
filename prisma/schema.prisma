@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// One row per media asset. `key` is the original /public filename
+// (e.g. "1000407545.jpg") so components can look URLs up by the name
+// they already use.
+model Media {
+  key       String   @id
+  url       String
+  publicId  String
+  type      String // "image" | "video"
+  width     Int?
+  height    Int?
+  bytes     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

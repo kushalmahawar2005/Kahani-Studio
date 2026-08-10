@@ -6,16 +6,20 @@ import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import IntroLoader from "@/components/IntroLoader";
 import FloatingActions from "@/components/FloatingActions";
+import { MediaProvider } from "@/components/MediaProvider";
+import { getMediaMap } from "@/lib/media";
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const mediaMap = await getMediaMap();
+
   return (
-    <>
+    <MediaProvider map={mediaMap}>
       <IntroLoader />
       <SmoothScroll />
       <ScrollProgress />
       <CustomCursor />
       {children}
       <FloatingActions />
-    </>
+    </MediaProvider>
   );
 }

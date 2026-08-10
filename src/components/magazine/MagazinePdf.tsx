@@ -17,6 +17,8 @@ import {
   PAGE,
   THEMES,
   getTemplate,
+  coverRatios,
+  DEFAULT_FOCUS,
   type MagPage,
   type Photo,
   type TextBlock,
@@ -66,10 +68,25 @@ function MagazineDocument({
 
         return (
           <Page key={page.id} size={[W, H]} style={{ backgroundColor: theme.bg }}>
-            {/* Photos */}
+            {/* Photos — cropped per the same pan/zoom focus used on screen */}
             {tpl.slots.map((s, i) => {
               const photo = page.photoIds[i] ? photos[page.photoIds[i] as string] : undefined;
               if (!photo) return null;
+
+              const contentW = s.w * W - g - (s.frame ? 2 * FRAME : 0);
+              const contentH = s.h * H - g - (s.frame ? 2 * FRAME : 0);
+              // Use the actual content-box ratio (post gap/frame), not the
+              // outer slot ratio — they diverge and crops must match the
+              // on-screen canvas exactly.
+              const slotAR = contentW / contentH;
+              const imgAR = photo.width / photo.height;
+              const focus = page.focus[i] ?? DEFAULT_FOCUS;
+              const { ratioW, ratioH } = coverRatios(imgAR, slotAR, focus.zoom);
+              const imgW = contentW * ratioW;
+              const imgH = contentH * ratioH;
+              const imgLeft = contentW * 0.5 - focus.x * imgW;
+              const imgTop = contentH * 0.5 - focus.y * imgH;
+
               return (
                 <View
                   key={i}
@@ -83,11 +100,13 @@ function MagazineDocument({
                     padding: s.frame ? FRAME : 0,
                   }}
                 >
-                  {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image */}
-                  <Image
-                    src={photo.dataUrl}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
+                  <View style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
+                    {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image */}
+                    <Image
+                      src={photo.dataUrl}
+                      style={{ position: "absolute", left: imgLeft, top: imgTop, width: imgW, height: imgH }}
+                    />
+                  </View>
                 </View>
               );
             })}
@@ -139,11 +158,13 @@ function MagazineDocument({
               />
             ))}
 
-            {/* Text blocks */}
+            {/* Template text blocks */}
             {tpl.texts.map((t) => {
+              if (page.hiddenTexts.includes(t.id)) return null;
               const value = page.texts[t.id] ?? "";
               if (value.trim() === "") return null;
               const text = t.upper ? value.toUpperCase() : value;
+              const pos = page.textPos[t.id] ?? { x: t.x, y: t.y };
               const textStyle = {
                 fontFamily: PDF_FONT[t.style],
                 fontSize: t.size,
@@ -157,8 +178,8 @@ function MagazineDocument({
                   key={t.id}
                   style={{
                     position: "absolute",
-                    left: t.x * W,
-                    top: t.y * H,
+                    left: pos.x * W,
+                    top: pos.y * H,
                     width: t.w * W,
                     height: t.h * H,
                     justifyContent: "flex-start",
@@ -173,6 +194,35 @@ function MagazineDocument({
                   ) : (
                     <Text style={{ ...textStyle, width: "100%" }}>{text}</Text>
                   )}
+                </View>
+              );
+            })}
+
+            {/* User-added free text boxes */}
+            {page.customTexts.map((c) => {
+              if (c.text.trim() === "") return null;
+              const textStyle = {
+                fontFamily: PDF_FONT[c.style],
+                fontSize: c.size,
+                color: color(c.color, theme),
+                textAlign: c.align,
+                lineHeight: 1.25,
+              };
+              return (
+                <View
+                  key={c.id}
+                  style={{
+                    position: "absolute",
+                    left: c.x * W,
+                    top: c.y * H,
+                    width: c.w * W,
+                    height: c.h * H,
+                    justifyContent: "flex-start",
+                    alignItems:
+                      c.align === "center" ? "center" : c.align === "right" ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <Text style={{ ...textStyle, width: "100%" }}>{c.text}</Text>
                 </View>
               );
             })}

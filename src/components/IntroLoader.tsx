@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useMedia } from "@/components/MediaProvider";
 
 const SESSION_KEY = "kc-intro-seen";
 const DURATION_MS = 2600;
 
 export default function IntroLoader() {
   const [show, setShow] = useState(false);
+  const chakraSrc = useMedia("chakra.png");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -60,7 +62,7 @@ export default function IntroLoader() {
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             >
               <Image
-                src="/chakra.png"
+                src={chakraSrc}
                 alt=""
                 width={80}
                 height={80}

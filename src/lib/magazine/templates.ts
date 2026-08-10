@@ -92,6 +92,10 @@ export interface Template {
   logos?: LogoSpec[];
   /** Dark gradient at the bottom — for titles laid over full-bleed photos. */
   scrim?: boolean;
+  /** width/height ratio of the page. Defaults to PAGE's A4 ratio (magazine
+   * templates); Instagram templates set this to 1 (square) or 0.8 (4:5). */
+  aspect?: number;
+  kind?: "magazine" | "instagram";
 }
 
 /* ─────────────────────────  Shared defaults  ───────────────────────── */
@@ -333,8 +337,120 @@ export const TEMPLATES: Template[] = [
   },
 ];
 
+/* ─────────────────────────  Instagram post templates  ───────────────────────── */
+/* Same Slot/TextBlock engine as the magazine, framed for square (1:1) or
+   portrait (4:5) posts instead of an A4 page. */
+
+export const IG_TEMPLATES: Template[] = [
+  /* Full-bleed photo + quote, scrim at bottom (square) */
+  {
+    id: "ig-photo-quote",
+    name: "Quote · Full Photo",
+    theme: "cream",
+    kind: "instagram",
+    aspect: 1,
+    gap: 0,
+    scrim: true,
+    slots: [{ x: 0, y: 0, w: 1, h: 1 }],
+    texts: [
+      { id: "quote", x: 0.08, y: 0.66, w: 0.84, h: 0.24, align: "center", size: 26, style: "serif-italic", color: "onPhoto", multiline: true, placeholder: "A short line…", default: Q1 },
+      { id: "credit", x: 0, y: 0.93, w: 1, h: 0.05, align: "center", size: 11, style: "label", color: "onPhoto", upper: true, tracking: 4, placeholder: "Studio", default: CREDIT },
+    ],
+  },
+
+  /* Framed portrait photo, title + caption below (4:5) */
+  {
+    id: "ig-portrait-caption",
+    name: "Caption · Portrait",
+    theme: "cream",
+    kind: "instagram",
+    aspect: 0.8,
+    gap: 8,
+    slots: [{ x: 0.06, y: 0.06, w: 0.88, h: 0.6, frame: true }],
+    texts: [
+      { id: "title", x: 0.1, y: 0.7, w: 0.8, h: 0.09, align: "center", size: 34, style: "display", color: "text", placeholder: "Title", default: "With You" },
+      { id: "caption", x: 0.12, y: 0.8, w: 0.76, h: 0.12, align: "center", size: 14, style: "serif-italic", color: "sub", multiline: true, placeholder: "A short line…", default: Q3 },
+      { id: "credit", x: 0, y: 0.94, w: 1, h: 0.04, align: "center", size: 9, style: "label", color: "sub", upper: true, tracking: 4, placeholder: "Studio", default: CREDIT },
+    ],
+  },
+
+  /* Testimonial: big quote + small avatar + name (square) */
+  {
+    id: "ig-testimonial",
+    name: "Testimonial",
+    theme: "ivory",
+    kind: "instagram",
+    aspect: 1,
+    gap: 8,
+    slots: [{ x: 0.1, y: 0.62, w: 0.2, h: 0.2, frame: true }],
+    texts: [
+      { id: "quote", x: 0.1, y: 0.1, w: 0.8, h: 0.42, align: "left", size: 28, style: "serif-italic", color: "text", multiline: true, placeholder: "The testimonial…", default: Q2 },
+      { id: "names", x: 0.36, y: 0.68, w: 0.54, h: 0.06, align: "left", size: 15, style: "label", color: "accent", upper: true, tracking: 2, placeholder: "Names", default: NAMES },
+      { id: "location", x: 0.36, y: 0.74, w: 0.54, h: 0.05, align: "left", size: 10, style: "sans", color: "sub", upper: true, tracking: 3, placeholder: "Location", default: "Udaipur, 2026" },
+      { id: "credit", x: 0, y: 0.93, w: 1, h: 0.05, align: "center", size: 9, style: "label", color: "sub", upper: true, tracking: 4, placeholder: "Studio", default: CREDIT },
+    ],
+  },
+
+  /* Typographic promo — no photo needed (square) */
+  {
+    id: "ig-promo",
+    name: "Promo · Typographic",
+    theme: "olive",
+    kind: "instagram",
+    aspect: 1,
+    gap: 0,
+    slots: [],
+    logos: [{ src: "/branding_clean.png", x: 0.3, y: 0.1, w: 0.4, h: 0.1 }],
+    rules: [
+      { x: 0.25, y: 0.42, w: 0.5 },
+      { x: 0.25, y: 0.66, w: 0.5 },
+    ],
+    texts: [
+      { id: "kicker", x: 0.1, y: 0.24, w: 0.8, h: 0.06, align: "center", size: 13, style: "label", color: "accent", upper: true, tracking: 6, placeholder: "Kicker", default: "Now Booking" },
+      { id: "title", x: 0.1, y: 0.46, w: 0.8, h: 0.16, align: "center", size: 46, style: "display", color: "text", placeholder: "Title", default: "2026 Dates" },
+      { id: "caption", x: 0.15, y: 0.7, w: 0.7, h: 0.1, align: "center", size: 12, style: "sans", color: "sub", multiline: true, placeholder: "Details…", default: "Only 4 dates left — write to us for a bespoke wedding film." },
+      { id: "contact", x: 0.15, y: 0.88, w: 0.7, h: 0.04, align: "center", size: 9, style: "label", color: "sub", upper: true, tracking: 3, placeholder: "Contact", default: "@kahani_click · wa.me / 919610240176" },
+    ],
+  },
+
+  /* Side-by-side duo, shared caption (square) */
+  {
+    id: "ig-duo",
+    name: "Duo · Side by Side",
+    theme: "gray",
+    kind: "instagram",
+    aspect: 1,
+    gap: 8,
+    slots: [
+      { x: 0.04, y: 0.06, w: 0.44, h: 0.72, frame: true },
+      { x: 0.52, y: 0.06, w: 0.44, h: 0.72, frame: true },
+    ],
+    texts: [
+      { id: "title", x: 0.1, y: 0.82, w: 0.8, h: 0.08, align: "center", size: 24, style: "display", color: "text", placeholder: "Title", default: "Before & After" },
+      { id: "credit", x: 0, y: 0.93, w: 1, h: 0.05, align: "center", size: 9, style: "label", color: "sub", upper: true, tracking: 4, placeholder: "Studio", default: CREDIT },
+    ],
+  },
+
+  /* Hero portrait, name overlay bottom (4:5) */
+  {
+    id: "ig-hero-portrait",
+    name: "Hero · Portrait",
+    theme: "cream",
+    kind: "instagram",
+    aspect: 0.8,
+    gap: 0,
+    scrim: true,
+    slots: [{ x: 0, y: 0, w: 1, h: 1 }],
+    texts: [
+      { id: "kicker", x: 0.08, y: 0.78, w: 0.84, h: 0.05, align: "left", size: 12, style: "label", color: "onPhoto", upper: true, tracking: 4, placeholder: "Kicker", default: "Queen of the Day" },
+      { id: "title", x: 0.07, y: 0.82, w: 0.86, h: 0.12, align: "left", size: 44, style: "display", color: "onPhoto", placeholder: "Title", default: "Bride" },
+      { id: "credit", x: 0.08, y: 0.94, w: 0.84, h: 0.04, align: "left", size: 9, style: "label", color: "onPhoto", upper: true, tracking: 3, placeholder: "Studio", default: CREDIT },
+    ],
+  },
+];
+
 export const getTemplate = (id: string): Template =>
-  TEMPLATES.find((t) => t.id === id) ?? TEMPLATES[0];
+  [...TEMPLATES, ...IG_TEMPLATES].find((t) => t.id === id) ?? TEMPLATES[0];
 
 /* ─────────────────────────  Page state  ───────────────────────── */
 
@@ -343,15 +459,77 @@ export interface MagPage {
   templateId: string;
   /** One entry per slot; photo id or null. */
   photoIds: (string | null)[];
+  /** Pan/zoom crop per slot index. Slots without an entry use DEFAULT_FOCUS. */
+  focus: Record<number, Focus>;
   /** Editable text, keyed by TextBlock id. */
   texts: Record<string, string>;
+  /** Dragged position override for a template's TextBlocks, keyed by TextBlock id. */
+  textPos: Record<string, { x: number; y: number }>;
+  /** User-added free text boxes, on top of the template's own. */
+  customTexts: CustomTextBox[];
+  /** Template TextBlock ids the user has fully deleted from this page. */
+  hiddenTexts: string[];
+}
+
+/** A user-added text box — same styling vocabulary as a template TextBlock,
+ * but freely positioned, resized and deleted by the person editing. */
+export interface CustomTextBox {
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  text: string;
+  align: "left" | "center" | "right";
+  size: number;
+  style: TextStyle;
+  color: TextColor;
+}
+
+export function makeCustomTextBox(): CustomTextBox {
+  return {
+    id: `tx_${Math.random().toString(36).slice(2, 9)}`,
+    x: 0.25,
+    y: 0.45,
+    w: 0.5,
+    h: 0.1,
+    text: "Double-click to edit",
+    align: "center",
+    size: 20,
+    style: "sans",
+    color: "text",
+  };
 }
 
 export interface Photo {
   id: string;
-  /** base64 data URL — works in both <img> and react-pdf <Image>. */
+  /** base64 JPEG data URL, normalized at upload time — works in both
+   * <img> and react-pdf <Image> (which only supports PNG/JPEG). */
   dataUrl: string;
   name: string;
+  /** Natural pixel dimensions of the normalized image — used for crop math. */
+  width: number;
+  height: number;
+}
+
+/** Pan/zoom crop for a photo inside a slot. x/y are the fraction of the
+ * source image centered in the slot; zoom 1 = default cover-fit. */
+export interface Focus {
+  x: number;
+  y: number;
+  zoom: number;
+}
+
+export const DEFAULT_FOCUS: Focus = { x: 0.5, y: 0.5, zoom: 1 };
+
+/** scale factors (relative to the slot box) an image needs at a given
+ * zoom to cover a slot of aspect ratio slotAR, for an image of aspect
+ * ratio imgAR. Shared by the on-screen canvas and the PDF renderer so
+ * crops match exactly between the two. */
+export function coverRatios(imgAR: number, slotAR: number, zoom: number) {
+  const ratioW = (imgAR >= slotAR ? imgAR / slotAR : 1) * zoom;
+  const ratioH = (imgAR >= slotAR ? 1 : slotAR / imgAR) * zoom;
+  return { ratioW, ratioH };
 }
 
 /** Build a page for a template, preserving any photos/text that still fit. */
@@ -366,7 +544,11 @@ export function makePage(templateId: string, previous?: MagPage): MagPage {
     id: previous?.id ?? `pg_${Math.random().toString(36).slice(2, 9)}`,
     templateId,
     photoIds: tpl.slots.map((_, i) => prevPhotos[i] ?? null),
+    focus: previous?.focus ?? {},
     texts,
+    textPos: previous?.textPos ?? {},
+    customTexts: previous?.customTexts ?? [],
+    hiddenTexts: previous?.hiddenTexts ?? [],
   };
 }
 
