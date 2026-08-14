@@ -18,11 +18,13 @@ import {
   THEMES,
   getTemplate,
   coverRatios,
+  styleToFontChoice,
   DEFAULT_FOCUS,
   type MagPage,
   type Photo,
   type TextBlock,
-  type TextStyle,
+  type FontFamily,
+  type FontWeight,
   type Theme,
 } from "@/lib/magazine/templates";
 
@@ -30,12 +32,16 @@ const W = PAGE.w;
 const H = PAGE.h;
 const FRAME = 5; // white mat thickness, pt
 
-const PDF_FONT: Record<TextStyle, string> = {
-  display: "Times-Bold",
-  "serif-italic": "Times-Italic",
-  label: "Helvetica-Bold",
-  sans: "Helvetica",
-};
+/** react-pdf only ships the 14 standard PDF fonts — Times (serif-ish) and
+ * Helvetica (sans-ish) are the closest built-in match to any of the 5
+ * on-screen font choices, since embedding the actual Google Fonts as PDF
+ * fonts isn't worth the extra fetch/registration for a print export. */
+function pdfFontFor(family: FontFamily, weight: FontWeight): string {
+  const base = family === "sans" || family === "modern" ? "Helvetica" : "Times";
+  if (weight === "bold") return base === "Helvetica" ? "Helvetica-Bold" : "Times-Bold";
+  if (weight === "italic") return base === "Helvetica" ? "Helvetica-Oblique" : "Times-Italic";
+  return base === "Helvetica" ? "Helvetica" : "Times-Roman";
+}
 
 function color(c: TextBlock["color"], theme: Theme): string {
   switch (c) {
@@ -165,9 +171,11 @@ function MagazineDocument({
               if (value.trim() === "") return null;
               const text = t.upper ? value.toUpperCase() : value;
               const pos = page.textPos[t.id] ?? { x: t.x, y: t.y };
+              const choice = page.textFont[t.id] ?? styleToFontChoice(t.style);
+              const fontSize = page.textSize[t.id] ?? t.size;
               const textStyle = {
-                fontFamily: PDF_FONT[t.style],
-                fontSize: t.size,
+                fontFamily: pdfFontFor(choice.family, choice.weight),
+                fontSize,
                 color: color(t.color, theme),
                 textAlign: t.align,
                 letterSpacing: t.tracking ?? 0,
@@ -202,7 +210,7 @@ function MagazineDocument({
             {page.customTexts.map((c) => {
               if (c.text.trim() === "") return null;
               const textStyle = {
-                fontFamily: PDF_FONT[c.style],
+                fontFamily: pdfFontFor(c.family, c.weight),
                 fontSize: c.size,
                 color: color(c.color, theme),
                 textAlign: c.align,

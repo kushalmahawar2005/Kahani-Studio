@@ -39,7 +39,7 @@ export interface Slot {
   frame?: boolean;
 }
 
-export type TextStyle = "display" | "serif-italic" | "label" | "sans";
+export type TextStyle = "display" | "serif" | "serif-italic" | "label" | "sans";
 export type TextColor = "text" | "sub" | "accent" | "onPhoto" | "onAccent";
 
 export interface TextBlock {
@@ -465,6 +465,10 @@ export interface MagPage {
   texts: Record<string, string>;
   /** Dragged position override for a template's TextBlocks, keyed by TextBlock id. */
   textPos: Record<string, { x: number; y: number }>;
+  /** Font-size override for a template's TextBlocks, keyed by TextBlock id. */
+  textSize: Record<string, number>;
+  /** Font (family + weight) override for a template's TextBlocks, keyed by TextBlock id. */
+  textFont: Record<string, FontChoice>;
   /** User-added free text boxes, on top of the template's own. */
   customTexts: CustomTextBox[];
   /** Template TextBlock ids the user has fully deleted from this page. */
@@ -482,7 +486,8 @@ export interface CustomTextBox {
   text: string;
   align: "left" | "center" | "right";
   size: number;
-  style: TextStyle;
+  family: FontFamily;
+  weight: FontWeight;
   color: TextColor;
 }
 
@@ -496,7 +501,8 @@ export function makeCustomTextBox(): CustomTextBox {
     text: "Double-click to edit",
     align: "center",
     size: 20,
-    style: "sans",
+    family: "sans",
+    weight: "regular",
     color: "text",
   };
 }
@@ -547,15 +553,61 @@ export function makePage(templateId: string, previous?: MagPage): MagPage {
     focus: previous?.focus ?? {},
     texts,
     textPos: previous?.textPos ?? {},
+    textSize: previous?.textSize ?? {},
+    textFont: previous?.textFont ?? {},
     customTexts: previous?.customTexts ?? [],
     hiddenTexts: previous?.hiddenTexts ?? [],
   };
 }
 
-/* Font stacks for the on-screen preview (PDF uses built-in fonts). */
-export const PREVIEW_FONT: Record<TextStyle, string> = {
-  display: "var(--font-playfair), Georgia, serif",
-  "serif-italic": "var(--font-playfair), Georgia, serif",
-  label: "var(--font-inter), system-ui, sans-serif",
+export const TEXT_SIZE_MIN = 8;
+export const TEXT_SIZE_MAX = 120;
+
+/* ─────────────────────────  Text toolbar (font + weight)  ───────────────────────── */
+/* The toolbar exposes font family and weight/style as two independent
+ * dropdowns. A template's own TextBlock.style (the old 5-value enum) is
+ * still how templates declare their default look; styleToFontChoice()
+ * converts that default into the family/weight pair the first time a box
+ * is touched, after which the page's own textFont override takes over. */
+
+export type FontFamily = "serif" | "classic" | "sans" | "modern" | "script";
+export type FontWeight = "regular" | "bold" | "italic";
+
+export interface FontChoice {
+  family: FontFamily;
+  weight: FontWeight;
+}
+
+export const FONT_FAMILY_OPTIONS: { value: FontFamily; label: string }[] = [
+  { value: "serif", label: "Playfair" },
+  { value: "classic", label: "Cormorant" },
+  { value: "sans", label: "Inter" },
+  { value: "modern", label: "Montserrat" },
+  { value: "script", label: "Dancing Script" },
+];
+
+export const WEIGHT_OPTIONS: { value: FontWeight; label: string }[] = [
+  { value: "regular", label: "Regular" },
+  { value: "bold", label: "Bold" },
+  { value: "italic", label: "Italic" },
+];
+
+/** Font stacks for the on-screen preview (PDF uses the nearest built-in
+ * Times/Helvetica equivalent — see MagazinePdf.tsx's pdfFontFor). */
+export const PREVIEW_FONT: Record<FontFamily, string> = {
+  serif: "var(--font-playfair), Georgia, serif",
+  classic: "var(--font-cormorant), Georgia, serif",
   sans: "var(--font-inter), system-ui, sans-serif",
+  modern: "var(--font-montserrat), system-ui, sans-serif",
+  script: "var(--font-dancing), cursive",
 };
+
+export function styleToFontChoice(style: TextStyle): FontChoice {
+  switch (style) {
+    case "display": return { family: "serif", weight: "bold" };
+    case "serif-italic": return { family: "serif", weight: "italic" };
+    case "label": return { family: "sans", weight: "bold" };
+    case "sans": return { family: "sans", weight: "regular" };
+    case "serif": return { family: "serif", weight: "regular" };
+  }
+}

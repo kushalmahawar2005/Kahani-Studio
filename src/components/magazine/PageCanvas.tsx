@@ -7,6 +7,7 @@ import {
   PREVIEW_FONT,
   getTemplate,
   coverRatios,
+  styleToFontChoice,
   DEFAULT_FOCUS,
   type MagPage,
   type Photo,
@@ -183,11 +184,13 @@ export default function PageCanvas({
         if (page.hiddenTexts.includes(t.id)) return null;
         const color = resolveColor(t.color, theme);
         const pos = page.textPos[t.id] ?? { x: t.x, y: t.y };
+        const choice = page.textFont[t.id] ?? styleToFontChoice(t.style);
+        const size = page.textSize[t.id] ?? t.size;
         const common: React.CSSProperties = {
-          fontFamily: PREVIEW_FONT[t.style],
-          fontStyle: t.style === "serif-italic" ? "italic" : "normal",
-          fontWeight: t.style === "display" ? 600 : t.style === "label" ? 700 : 400,
-          fontSize: cqw(t.size),
+          fontFamily: PREVIEW_FONT[choice.family],
+          fontStyle: choice.weight === "italic" ? "italic" : "normal",
+          fontWeight: choice.weight === "bold" ? 700 : 400,
+          fontSize: cqw(size),
           letterSpacing: t.tracking ? cqw(t.tracking) : undefined,
           textTransform: t.upper ? "uppercase" : "none",
           textAlign: t.align,
@@ -247,9 +250,9 @@ export default function PageCanvas({
       {page.customTexts.map((c) => {
         const color = resolveColor(c.color, theme);
         const common: React.CSSProperties = {
-          fontFamily: PREVIEW_FONT[c.style],
-          fontStyle: c.style === "serif-italic" ? "italic" : "normal",
-          fontWeight: c.style === "display" ? 600 : c.style === "label" ? 700 : 400,
+          fontFamily: PREVIEW_FONT[c.family],
+          fontStyle: c.weight === "italic" ? "italic" : "normal",
+          fontWeight: c.weight === "bold" ? 700 : 400,
           fontSize: cqw(c.size),
           textAlign: c.align,
           color,

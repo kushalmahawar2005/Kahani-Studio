@@ -4,6 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   TEMPLATES,
+  FONT_FAMILY_OPTIONS,
+  WEIGHT_OPTIONS,
+  TEXT_SIZE_MIN,
+  TEXT_SIZE_MAX,
+  styleToFontChoice,
   getTemplate,
   makePage,
   makeCustomTextBox,
@@ -11,6 +16,8 @@ import {
   type MagPage,
   type Photo,
   type Focus,
+  type FontFamily,
+  type FontWeight,
 } from "@/lib/magazine/templates";
 import { normalizeImage } from "@/lib/magazine/normalizeImage";
 import PageCanvas, { PHOTO_DRAG_MIME } from "@/components/magazine/PageCanvas";
@@ -32,6 +39,18 @@ export default function MagazineBuilder() {
   const selectedPhotoId = selectedSlot !== null ? page.photoIds[selectedSlot] : null;
   const selectedFocus =
     selectedSlot !== null ? page.focus[selectedSlot] ?? DEFAULT_FOCUS : DEFAULT_FOCUS;
+  const selectedTemplateText = selectedText ? tpl.texts.find((t) => t.id === selectedText) : undefined;
+  const selectedCustomText = selectedText ? page.customTexts.find((c) => c.id === selectedText) : undefined;
+  const selectedFontChoice = selectedCustomText
+    ? { family: selectedCustomText.family, weight: selectedCustomText.weight }
+    : selectedTemplateText
+    ? page.textFont[selectedTemplateText.id] ?? styleToFontChoice(selectedTemplateText.style)
+    : undefined;
+  const selectedFontSize = selectedCustomText
+    ? selectedCustomText.size
+    : selectedTemplateText
+    ? page.textSize[selectedTemplateText.id] ?? selectedTemplateText.size
+    : undefined;
 
   /* ---- photos ---- */
   async function handleUpload(files: FileList | null) {
@@ -159,6 +178,55 @@ export default function MagazineBuilder() {
           };
         }
         return { ...pg, textPos: { ...pg.textPos, [id]: { x, y } } };
+      })
+    );
+  }
+
+  function setTextFamily(id: string, family: FontFamily) {
+    setPages((ps) =>
+      ps.map((pg, i) => {
+        if (i !== current) return pg;
+        if (pg.customTexts.some((c) => c.id === id)) {
+          return {
+            ...pg,
+            customTexts: pg.customTexts.map((c) => (c.id === id ? { ...c, family } : c)),
+          };
+        }
+        const tb = tpl.texts.find((t) => t.id === id);
+        const choice = pg.textFont[id] ?? (tb ? styleToFontChoice(tb.style) : { family: "sans" as const, weight: "regular" as const });
+        return { ...pg, textFont: { ...pg.textFont, [id]: { ...choice, family } } };
+      })
+    );
+  }
+
+  function setTextWeight(id: string, weight: FontWeight) {
+    setPages((ps) =>
+      ps.map((pg, i) => {
+        if (i !== current) return pg;
+        if (pg.customTexts.some((c) => c.id === id)) {
+          return {
+            ...pg,
+            customTexts: pg.customTexts.map((c) => (c.id === id ? { ...c, weight } : c)),
+          };
+        }
+        const tb = tpl.texts.find((t) => t.id === id);
+        const choice = pg.textFont[id] ?? (tb ? styleToFontChoice(tb.style) : { family: "sans" as const, weight: "regular" as const });
+        return { ...pg, textFont: { ...pg.textFont, [id]: { ...choice, weight } } };
+      })
+    );
+  }
+
+  function setTextFontSize(id: string, size: number) {
+    setPages((ps) =>
+      ps.map((pg, i) => {
+        if (i !== current) return pg;
+        if (pg.customTexts.some((c) => c.id === id)) {
+          return {
+            ...pg,
+            customTexts: pg.customTexts.map((c) => (c.id === id ? { ...c, size } : c)),
+          };
+        }
+        return { ...pg, textSize: { ...pg.textSize, [id]: size } };
       })
     );
   }
@@ -292,6 +360,55 @@ export default function MagazineBuilder() {
             <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400">
               Page {current + 1} · {tpl.name}
             </p>
+            <div className="mb-3 flex h-9 items-center justify-center">
+              {selectedText && selectedFontChoice !== undefined && selectedFontSize !== undefined && (
+                <div className="flex items-center gap-2 whitespace-nowrap rounded-full border border-charcoal/10 bg-white/70 px-2 py-1.5">
+                  <select
+                    value={selectedFontChoice.family}
+                    onChange={(e) => setTextFamily(selectedText, e.target.value as FontFamily)}
+                    className="rounded-full border border-charcoal/15 bg-transparent px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-zinc-700 outline-none"
+                  >
+                    {FONT_FAMILY_OPTIONS.map((f) => (
+                      <option key={f.value} value={f.value}>
+                        {f.label}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={selectedFontChoice.weight}
+                    onChange={(e) => setTextWeight(selectedText, e.target.value as FontWeight)}
+                    className="rounded-full border border-charcoal/15 bg-transparent px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-zinc-700 outline-none"
+                  >
+                    {WEIGHT_OPTIONS.map((w) => (
+                      <option key={w.value} value={w.value}>
+                        {w.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setTextFontSize(selectedText, Math.max(TEXT_SIZE_MIN, selectedFontSize - 1))}
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-zinc-600 hover:bg-charcoal/10"
+                      title="Smaller"
+                    >
+                      −
+                    </button>
+                    <span className="w-6 text-center text-[9px] font-bold text-zinc-600">
+                      {Math.round(selectedFontSize)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setTextFontSize(selectedText, Math.min(TEXT_SIZE_MAX, selectedFontSize + 1))}
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-zinc-600 hover:bg-charcoal/10"
+                      title="Bigger"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
             <PageCanvas
               page={page}
               photos={photos}
