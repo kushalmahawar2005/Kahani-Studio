@@ -14,21 +14,8 @@
   --foreground: #1a1a1a;
 }
 
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -37,6 +24,16 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   position: relative;
+}
+
+/* On small screens, sections outside the viewport do not need style/layout
+   work during the first paint. The intrinsic placeholder keeps scroll and
+   anchor positions stable until each section approaches the viewport. */
+@media (max-width: 767px) {
+  main > section:not(:first-of-type) {
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 900px;
+  }
 }
 
 @media (pointer: fine) {

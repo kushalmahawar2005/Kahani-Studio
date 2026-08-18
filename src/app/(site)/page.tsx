@@ -272,13 +272,6 @@ export default function Home() {
               </div>
             </div>
 
-            <p
-              className="mt-3 text-[clamp(2.5rem,12vw,4rem)] sm:hidden leading-none tracking-[0.06em] uppercase"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-            >
-              Kahani Clicks
-            </p>
-
             <div
               className="mt-4 md:mt-6 flex flex-col items-center px-6 relative"
               style={{ position: "relative" }}

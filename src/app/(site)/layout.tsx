@@ -1,9 +1,7 @@
-// Marketing-site chrome (smooth scroll, custom cursor, floating
-// contact actions). Scoped here so the cinematic /m/[slug] and the /studio
-// dashboard stay clean — they live outside this route group.
-import SmoothScroll from "@/components/SmoothScroll";
-import CustomCursor from "@/components/CustomCursor";
-import ScrollProgress from "@/components/ScrollProgress";
+// Marketing-site contact actions. Scoped here so the cinematic /m/[slug]
+// and the /studio dashboard stay clean — they live outside this route group.
+// Native scrolling and the CSS cursor keep the same core UX without loading
+// a permanent animation loop on every mobile visit.
 import FloatingActions from "@/components/FloatingActions";
 import { MediaProvider } from "@/components/MediaProvider";
 import { getMediaMap } from "@/lib/media";
@@ -13,9 +11,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <MediaProvider map={mediaMap}>
-      <SmoothScroll />
-      <ScrollProgress />
-      <CustomCursor />
       {children}
       <FloatingActions />
     </MediaProvider>
