@@ -1,8 +1,20 @@
 import {
   Cormorant_Garamond,
   Dancing_Script,
+  Inter,
   Montserrat,
+  Playfair_Display,
 } from "next/font/google";
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -27,7 +39,7 @@ export default function MagazineLayout({
 }) {
   return (
     <div
-      className={`${cormorant.variable} ${montserrat.variable} ${dancingScript.variable}`}
+      className={`${playfair.variable} ${inter.variable} ${cormorant.variable} ${montserrat.variable} ${dancingScript.variable}`}
     >
       {children}
     </div>

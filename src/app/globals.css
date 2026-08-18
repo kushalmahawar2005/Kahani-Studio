@@ -5,8 +5,8 @@
   --color-soft-white: #fdfdf5;
   --color-charcoal: #1a1a1a;
   --color-gold: #c5a059;
-  --font-display: var(--font-playfair);
-  --font-sans: var(--font-inter);
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-sans: Arial, Helvetica, sans-serif;
 }
 
 :root {

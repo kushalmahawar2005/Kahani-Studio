@@ -252,8 +252,7 @@ export default function Home() {
                   alt="Kahani Clicks"
                   width={800}
                   height={800}
-                  loading="eager"
-                  fetchPriority="low"
+                  preload
                   quality={45}
                   sizes="(max-width: 640px) 36vw, (max-width: 1024px) 50vw, 800px"
                   className="mx-auto w-[36vw] sm:w-[50vw] max-w-[148px] sm:max-w-[800px] h-auto"

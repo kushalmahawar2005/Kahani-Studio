@@ -254,7 +254,7 @@ export function ScrollStackImageCard({
           <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.4em] sm:tracking-[0.5em] opacity-70 block mb-2 sm:mb-3">
             {String(index + 1).padStart(2, "0")} · {subtitle}
           </span>
-          <h3 className="text-2xl sm:text-4xl md:text-6xl font-[var(--font-playfair)] italic tracking-tight">
+          <h3 className="text-2xl sm:text-4xl md:text-6xl font-display italic tracking-tight">
             {title}
           </h3>
         </div>
