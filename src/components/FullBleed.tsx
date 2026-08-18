@@ -61,6 +61,7 @@ export default function FullBleed({
             loop
             playsInline
             muted
+            preload="none"
             onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
             className="absolute inset-0 w-full h-full object-cover"
           />

@@ -1,52 +1,17 @@
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Playfair_Display,
-  Inter,
-  Cormorant_Garamond,
-  Montserrat,
-  Dancing_Script,
-} from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-});
-
-/* Extra magazine-editor font choices — Cormorant (classic serif), Montserrat
- * (modern sans) and Dancing Script (script) round out the text toolbar's
- * 5-font picker alongside Playfair Display and Inter. */
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-});
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-});
-
-const dancingScript = Dancing_Script({
-  variable: "--font-dancing",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 const SITE_URL = "https://kahaniclicks.store";
@@ -147,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${inter.variable} ${cormorant.variable} ${montserrat.variable} ${dancingScript.variable} h-full antialiased`}
+      className={`${playfair.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body

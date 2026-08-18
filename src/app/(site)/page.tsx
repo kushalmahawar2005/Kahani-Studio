@@ -22,7 +22,11 @@ import UrgencyStrip from "@/components/UrgencyStrip";
 import Newsletter from "@/components/Newsletter";
 import LegacySection from "@/components/LegacySection";
 import Logo from "@/components/Logo";
-import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
+import {
+  useMediaMap,
+  resolveMedia,
+  optimizeCloudinaryImage,
+} from "@/components/MediaProvider";
 
 // Excludes 1000407545.jpg, 1000407549.jpg, CA9A1703.JPG and CA9A3856.JPG —
 // those four are already the Hero ScrollStack picks directly above, so
@@ -54,6 +58,25 @@ const galleryImages = [
   { src: "b28f26484d0520cb6be6381f8ddd091c.jpg", title: "The Stage", category: "Decor", year: "MMXXVI", span: "wide" },
   { src: "1000928369.jpg", title: "The Ritual", category: "Ritual", year: "MMXXVI", span: "tall" },
 ];
+
+// The masonry layout needs intrinsic dimensions so native lazy-loading can
+// tell which images are actually below the fold before they download.
+const galleryDimensions: Record<string, readonly [number, number]> = {
+  "1000519168.jpg": [1599, 2400],
+  "1000927051.jpg": [2000, 1334],
+  "1000928359.jpg": [2000, 1334],
+  "CA9A2577.JPG": [2000, 1334],
+  "CA9A2580.JPG": [2000, 1334],
+  "CA9A3213.JPG": [2000, 1334],
+  "CA9A9700.jpg": [1688, 2110],
+  "_MVS2232.JPG": [2000, 1334],
+  "b28f26484d0520cb6be6381f8ddd091c.jpg": [736, 920],
+  "1000928369.jpg": [2000, 1334],
+};
+
+function getGalleryDimensions(src: string): readonly [number, number] {
+  return galleryDimensions[src] ?? [2000, 3000];
+}
 
 const testimonials = [
   {
@@ -200,79 +223,72 @@ export default function Home() {
         <div className="absolute inset-x-0 top-0 h-[1px] bg-charcoal/5 mx-20" />
 
         <div className="w-full flex flex-col items-center justify-start text-center">
-          {/* SEO heading — read by search engines & screen readers; the
-              visual headline above is an image, so this carries the keywords. */}
-          <h1 className="sr-only">
-            Kahani Clicks — Wedding Photography &amp; Cinematography in Rajasthan
-          </h1>
-          <div
-            className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8 relative"
-            style={{ position: "relative" }}
-            suppressHydrationWarning
-          >
-            <motion.div
-              initial={{ opacity: 0, x: -90, scale: 0.85, rotate: -8 }}
-              animate={{ opacity: 0.6, x: 0, scale: 1, rotate: 0 }}
-              transition={{ delay: 2.6, duration: 1.6, ease: [0.19, 1, 0.22, 1] }}
-              className="shrink-0"
+          <div className="w-full min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-5rem)] flex flex-col items-center justify-center">
+            {/* SEO heading — read by search engines & screen readers; the
+                visual headline above is an image, so this carries the keywords. */}
+            <h1 className="sr-only">
+              Kahani Clicks — Wedding Photography &amp; Cinematography in Rajasthan
+            </h1>
+            <div
+              className="mb-2 px-4 md:px-6 flex items-center justify-center gap-3 md:gap-8 relative"
+              style={{ position: "relative" }}
               suppressHydrationWarning
             >
-              <Image
-                src={resolveMedia(media, "chakra.png")}
-                alt=""
-                width={120}
-                height={120}
-                priority
-                className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
-              className="shrink-0"
-              suppressHydrationWarning
-            >
-              <Image
-                src={resolveMedia(media, "branding_clean.png")}
-                alt="Kahani Clicks"
-                width={800}
-                height={500}
-                priority
-                className="mx-auto w-[60vw] sm:w-[50vw] max-w-[800px] h-auto"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 90, scale: 0.85, rotate: 8 }}
-              animate={{ opacity: 0.6, x: 0, scale: 1, rotate: 0 }}
-              transition={{ delay: 2.6, duration: 1.6, ease: [0.19, 1, 0.22, 1] }}
-              className="shrink-0"
-              suppressHydrationWarning
-            >
-              <Image
-                src={resolveMedia(media, "shankha.png")}
-                alt=""
-                width={120}
-                height={120}
-                priority
-                className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
-              />
-            </motion.div>
-          </div>
+              <div className="shrink-0 opacity-60">
+                <Image
+                  src={resolveMedia(media, "chakra.png")}
+                  alt=""
+                  width={120}
+                  height={120}
+                  loading="eager"
+                  fetchPriority="low"
+                  sizes="(max-width: 768px) 50px, 120px"
+                  className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
+                />
+              </div>
+              <div className="shrink-0">
+                <Image
+                  src={resolveMedia(media, "branding_clean.png")}
+                  alt="Kahani Clicks"
+                  width={800}
+                  height={800}
+                  loading="eager"
+                  fetchPriority="low"
+                  quality={45}
+                  sizes="(max-width: 640px) 36vw, (max-width: 1024px) 50vw, 800px"
+                  className="mx-auto w-[36vw] sm:w-[50vw] max-w-[148px] sm:max-w-[800px] h-auto"
+                />
+              </div>
+              <div className="shrink-0 opacity-60">
+                <Image
+                  src={resolveMedia(media, "shankha.png")}
+                  alt=""
+                  width={120}
+                  height={120}
+                  loading="eager"
+                  fetchPriority="low"
+                  sizes="(max-width: 768px) 50px, 120px"
+                  className="w-[15vw] max-w-[50px] md:max-w-[120px] h-auto"
+                />
+              </div>
+            </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 3.2, duration: 1.6 }}
-            className="mt-4 md:mt-6 flex flex-col items-center px-6 relative"
-            style={{ position: "relative" }}
-            suppressHydrationWarning
-          >
-            <p className="max-w-sm md:max-w-md text-[9px] sm:text-[10px] md:text-xs leading-relaxed uppercase tracking-[0.2em] sm:tracking-[0.3em] md:tracking-widest text-zinc-500 text-center">
-              Capturing the silent symphony of light and life with timeless precision.
+            <p
+              className="mt-3 text-[clamp(2.5rem,12vw,4rem)] sm:hidden leading-none tracking-[0.06em] uppercase"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Kahani Clicks
             </p>
 
-            <div className="mt-5 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4 items-center w-full px-4 sm:px-0 sm:w-auto">
+            <div
+              className="mt-4 md:mt-6 flex flex-col items-center px-6 relative"
+              style={{ position: "relative" }}
+            >
+              <p className="max-w-[320px] sm:max-w-sm md:max-w-md text-[9px] sm:text-[10px] md:text-xs leading-relaxed uppercase tracking-[0.2em] sm:tracking-[0.3em] md:tracking-widest text-zinc-500 text-center">
+                Capturing the silent symphony of light and life with timeless precision.
+              </p>
+
+              <div className="mt-5 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4 items-center w-full px-4 sm:px-0 sm:w-auto">
               <Magnetic>
                 <a
                   href="#work"
@@ -295,20 +311,14 @@ export default function Home() {
                   <span className="transition-transform group-hover:translate-x-1">↗</span>
                 </a>
               </Magnetic>
-            </div>
+              </div>
 
-            <motion.div
-              initial={{ height: 0 }}
-              animate={{ height: 48 }}
-              transition={{ delay: 3.6, duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
-              className="mt-4 md:mt-6 w-[1px] bg-charcoal relative"
-              style={{ position: "relative" }}
-              suppressHydrationWarning
-            />
-            <span className="mt-1 mb-1 text-[9px] font-bold uppercase tracking-[0.5em] text-zinc-400">
-              Scroll
-            </span>
-          </motion.div>
+              <div className="mt-4 md:mt-6 h-12 w-px bg-charcoal relative" />
+              <span className="mt-1 mb-1 text-[9px] font-bold uppercase tracking-[0.5em] text-zinc-400">
+                Scroll
+              </span>
+            </div>
+          </div>
 
           {/* Hero ScrollStack — cinematic image cards */}
           <ScrollStack>
@@ -443,9 +453,14 @@ export default function Home() {
                 className="relative overflow-hidden bg-zinc-100 group cursor-pointer block w-full mb-1.5 sm:mb-2 md:mb-3 break-inside-avoid"
                 data-cursor="view"
               >
+                {/* Cloudinary handles responsive sizing here while preserving each masonry image's intrinsic ratio. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={resolveMedia(media, img.src)}
+                  src={optimizeCloudinaryImage(resolveMedia(media, img.src), 640)}
+                  srcSet={`${optimizeCloudinaryImage(resolveMedia(media, img.src), 320)} 320w, ${optimizeCloudinaryImage(resolveMedia(media, img.src), 640)} 640w, ${optimizeCloudinaryImage(resolveMedia(media, img.src), 960)} 960w`}
+                  sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
+                  width={getGalleryDimensions(img.src)[0]}
+                  height={getGalleryDimensions(img.src)[1]}
                   alt={img.title}
                   loading="lazy"
                   decoding="async"
@@ -857,4 +872,3 @@ function FaqItem({
     </div>
   );
 }
-

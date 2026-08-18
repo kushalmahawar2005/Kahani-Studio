@@ -34,3 +34,16 @@ export function useMedia(filename: string): string {
 export function resolveMedia(map: MediaMap, filename: string): string {
   return map[filename] ?? `/${filename}`;
 }
+
+/** Request an appropriately sized, modern-format Cloudinary image when a
+ * component needs a native <img> (for example, the variable-height masonry
+ * gallery). Local fallback URLs are returned unchanged. */
+export function optimizeCloudinaryImage(src: string, width: number): string {
+  const marker = "/image/upload/";
+  if (!src.startsWith("https://res.cloudinary.com/") || !src.includes(marker)) {
+    return src;
+  }
+
+  const [base, asset] = src.split(marker);
+  return `${base}${marker}f_auto,q_auto:eco,w_${width},c_limit/${asset}`;
+}

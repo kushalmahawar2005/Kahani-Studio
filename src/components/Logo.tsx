@@ -15,7 +15,9 @@ export default function Logo({ className = "", iconSize = 28 }: { className?: st
         alt="Kahani Clicks" 
         width={150} 
         height={150} 
-        priority
+        loading="eager"
+        fetchPriority="low"
+        sizes="150px"
         style={{ height: `${imgHeight}px`, width: "auto" }}
         className="object-contain"
       />

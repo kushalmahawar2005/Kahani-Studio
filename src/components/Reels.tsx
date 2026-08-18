@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import { VolumeX } from "lucide-react";
+import Image from "next/image";
 import Reveal from "./Reveal";
 import VideoLightbox from "./VideoLightbox";
 import { useMediaMap, resolveMedia } from "@/components/MediaProvider";
@@ -100,6 +101,7 @@ function ReelCard({
   const wrapRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canHover = useRef(false);
+  const [videoReady, setVideoReady] = useState(false);
   /* Pause off-screen videos to save resources; resume when in view. */
   const inView = useInView(wrapRef, { amount: 0.2 });
 
@@ -139,16 +141,24 @@ function ReelCard({
       style={{ animationDelay: `${index * 60}ms` }}
       className="group relative shrink-0 snap-center w-[68vw] sm:w-[300px] md:w-[340px] aspect-[9/16] overflow-hidden rounded-2xl bg-zinc-200 border border-charcoal/10 text-left"
     >
+      <Image
+        src={reel.poster}
+        alt=""
+        fill
+        sizes="(max-width: 640px) 68vw, (max-width: 768px) 300px, 340px"
+        className="object-cover"
+      />
       <video
         ref={videoRef}
-        src={reel.src}
-        poster={reel.poster}
+        src={inView ? reel.src : undefined}
         loop
         muted
-        autoPlay
         playsInline
-        preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        preload="none"
+        onCanPlay={() => setVideoReady(true)}
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 ${
+          videoReady && inView ? "opacity-100" : "opacity-0"
+        }`}
       />
 
       {/* Gradient + label */}
