@@ -15,37 +15,46 @@ type Service = {
   price: number;
   emoji: string;
   unit?: string;
+  /* When set, the client picks a day count and price = price × days. */
+  perDay?: boolean;
+  defaultDays?: number;
 };
 
 type Group = { group: string; items: Service[] };
 
-/* Indicative starting prices (INR). Final quote is confirmed by the studio. */
+/* Day-count options for per-day services. */
+const DAY_OPTIONS = [1, 2, 3, 4, 5] as const;
+const MIN_DAYS = DAY_OPTIONS[0];
+const MAX_DAYS = DAY_OPTIONS[DAY_OPTIONS.length - 1];
+
+/* Indicative starting prices (INR). Final quote is confirmed by the studio.
+   For per-day services, `price` is the per-day rate. */
 const CATALOG: Group[] = [
   {
     group: "Coverage",
     items: [
-      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 10000, emoji: "📸", unit: "1 day" },
-      { id: "trad-photo", name: "Traditional Photography", desc: "Classic posed & ceremony coverage", price: 10000, emoji: "🪔", unit: "2 days" },
+      { id: "candid-photo", name: "Candid Photography", desc: "Documentary-style, emotion-first stills", price: 10000, emoji: "📸", perDay: true, defaultDays: 1 },
+      { id: "trad-photo", name: "Traditional Photography", desc: "Classic posed & ceremony coverage", price: 10000, emoji: "🪔", perDay: true, defaultDays: 2 },
     ],
   },
   {
     group: "Films",
     items: [
-      { id: "trad-video", name: "Traditional Videography", desc: "Full-length ceremony documentation", price: 10000, emoji: "🎥", unit: "2 days" },
-      { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬", unit: "1 day" },
-      { id: "wedding-reel", name: "Wedding Reel", desc: "Full-wedding reel delivered for socials", price: 25000, emoji: "📱" },
+      { id: "trad-video", name: "Traditional Videography", desc: "Full-length ceremony documentation", price: 10000, emoji: "🎥", perDay: true, defaultDays: 2 },
+      { id: "cinematography", name: "Cinematography", desc: "Cinematic, hand-graded wedding film", price: 10000, emoji: "🎬", perDay: true, defaultDays: 1 },
+      { id: "wedding-reel", name: "Wedding Reel", desc: "Full-wedding reel delivered for socials", price: 25000, emoji: "📱", perDay: true, defaultDays: 1 },
     ],
   },
   {
     group: "Add-ons",
     items: [
-      { id: "drone", name: "Drone Coverage", desc: "Aerial cinematography & stills", price: 7000, emoji: "🚁", unit: "1 day" },
+      { id: "drone", name: "Drone Coverage", desc: "Aerial cinematography & stills", price: 7000, emoji: "🚁", perDay: true, defaultDays: 1 },
     ],
   },
   {
     group: "Albums & Prints",
     items: [
-      { id: "album", name: "Album Design", desc: "Fine-art heirloom album design", price: 22000, emoji: "📖" },
+      { id: "album", name: "Album Design", desc: "Fine-art heirloom album design", price: 22000, emoji: "📖", perDay: true, defaultDays: 1 },
     ],
   },
 ];
@@ -59,9 +68,17 @@ const inr = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
-/* Price label that appends a billing unit (e.g. "/ 2 days") where set. */
+const clampDays = (n: number) =>
+  Math.min(MAX_DAYS, Math.max(MIN_DAYS, Math.round(n)));
+
+const dayLabel = (n: number) => `${n} ${n > 1 ? "days" : "day"}`;
+
+/* Price label for the service card: a per-day rate, or a flat price with an
+   optional billing unit (e.g. "/ 2 days"). */
 const priceLabel = (s: Service) =>
-  `${inr.format(s.price)}${s.unit ? ` / ${s.unit}` : ""}`;
+  s.perDay
+    ? `${inr.format(s.price)} / day`
+    : `${inr.format(s.price)}${s.unit ? ` / ${s.unit}` : ""}`;
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -78,6 +95,8 @@ const EMPTY: Details = { name: "", phone: "", email: "", event: "", date: "", ci
 
 export default function PackageBuilder() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  /* Per-service day count, keyed by service id. Missing = service default. */
+  const [days, setDays] = useState<Record<string, number>>({});
   const [details, setDetails] = useState<Details>(EMPTY);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -90,16 +109,28 @@ export default function PackageBuilder() {
       return next;
     });
 
+  const setDay = (id: string, n: number) =>
+    setDays((d) => ({ ...d, [id]: clampDays(n) }));
+
   const update = (k: keyof Details, v: string) =>
     setDetails((d) => ({ ...d, [k]: v }));
+
+  /* Chosen day count for a per-day service (falls back to its default). */
+  const daysOf = (s: Service) =>
+    s.perDay ? days[s.id] ?? s.defaultDays ?? MIN_DAYS : undefined;
+
+  /* Line price: per-day rate × chosen days, or the flat price. */
+  const lineTotal = (s: Service) =>
+    s.perDay ? s.price * (days[s.id] ?? s.defaultDays ?? MIN_DAYS) : s.price;
 
   const chosen = useMemo(
     () => ALL_SERVICES.filter((s) => selected.has(s.id)),
     [selected]
   );
   const total = useMemo(
-    () => chosen.reduce((sum, s) => sum + s.price, 0),
-    [chosen]
+    () => chosen.reduce((sum, s) => sum + lineTotal(s), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chosen, days]
   );
 
   /* Human-readable package summary, shared by WhatsApp + email. */
@@ -107,7 +138,10 @@ export default function PackageBuilder() {
     const lines = [
       "✨ My Custom Package — Kahani Clicks",
       "",
-      ...chosen.map((s) => `• ${s.name} — ${priceLabel(s)}`),
+      ...chosen.map((s) => {
+        const d = daysOf(s);
+        return `• ${s.name}${d ? ` (${dayLabel(d)})` : ""} — ${inr.format(lineTotal(s))}`;
+      }),
       "",
       `Estimated total: ${inr.format(total)}`,
       "—",
@@ -119,7 +153,8 @@ export default function PackageBuilder() {
       details.city && `City / Venue: ${details.city}`,
     ].filter(Boolean);
     return lines.join("\n");
-  }, [chosen, total, details]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosen, total, details, days]);
 
   const waHref = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(summary)}`;
 
@@ -205,12 +240,21 @@ export default function PackageBuilder() {
                   {g.items.map((s) => {
                     const active = selected.has(s.id);
                     return (
-                      <button
+                      <div
                         key={s.id}
-                        type="button"
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={active}
                         onClick={() => toggle(s.id)}
+                        onKeyDown={(e) => {
+                          if (e.target !== e.currentTarget) return;
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggle(s.id);
+                          }
+                        }}
                         data-cursor="link"
-                        className={`group relative flex flex-col text-left p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl border transition-all duration-300 ${
+                        className={`group relative flex flex-col text-left cursor-pointer p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl border transition-all duration-300 ${
                           active
                             ? "bg-charcoal text-cream border-charcoal shadow-lg"
                             : "bg-[#fdfcf0] border-charcoal/10 hover:border-charcoal/40"
@@ -245,7 +289,40 @@ export default function PackageBuilder() {
                         >
                           from {priceLabel(s)}
                         </p>
-                      </button>
+
+                        {active && s.perDay && (
+                          <div
+                            className="mt-3 flex flex-wrap items-center gap-1.5"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-cream/50 mr-0.5">
+                              Days
+                            </span>
+                            {DAY_OPTIONS.map((n) => {
+                              const on = daysOf(s) === n;
+                              return (
+                                <button
+                                  key={n}
+                                  type="button"
+                                  aria-label={`Set ${dayLabel(n)}`}
+                                  aria-pressed={on}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDay(s.id, n);
+                                  }}
+                                  className={`w-6 h-6 rounded-full text-[11px] font-display leading-none transition-all ${
+                                    on
+                                      ? "bg-gold text-charcoal"
+                                      : "bg-cream/10 text-cream/70 hover:bg-cream/25"
+                                  }`}
+                                >
+                                  {n}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -308,15 +385,44 @@ export default function PackageBuilder() {
                               animate={{ opacity: 1, x: 0 }}
                               exit={{ opacity: 0, x: 10 }}
                               transition={{ duration: 0.3 }}
-                              className="flex items-center justify-between gap-3 text-sm"
+                              className="flex items-start justify-between gap-3 text-sm"
                             >
-                              <span className="flex items-center gap-2 text-zinc-700">
-                                <span>{s.emoji}</span>
-                                {s.name}
+                              <span className="flex flex-col gap-1.5 min-w-0">
+                                <span className="flex items-center gap-2 text-zinc-700">
+                                  <span>{s.emoji}</span>
+                                  {s.name}
+                                </span>
+                                {s.perDay && (
+                                  <span className="flex flex-wrap items-center gap-1">
+                                    {DAY_OPTIONS.map((n) => {
+                                      const on = daysOf(s) === n;
+                                      return (
+                                        <button
+                                          key={n}
+                                          type="button"
+                                          aria-label={`Set ${dayLabel(n)} for ${s.name}`}
+                                          aria-pressed={on}
+                                          onClick={() => setDay(s.id, n)}
+                                          className={`w-5 h-5 rounded-full text-[10px] font-display leading-none transition-all ${
+                                            on
+                                              ? "bg-charcoal text-cream"
+                                              : "bg-charcoal/5 text-zinc-500 hover:bg-charcoal/15"
+                                          }`}
+                                          data-cursor="link"
+                                        >
+                                          {n}
+                                        </button>
+                                      );
+                                    })}
+                                    <span className="ml-1 text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+                                      days
+                                    </span>
+                                  </span>
+                                )}
                               </span>
                               <span className="flex items-center gap-3 shrink-0">
                                 <span className="font-display">
-                                  {priceLabel(s)}
+                                  {s.perDay ? inr.format(lineTotal(s)) : priceLabel(s)}
                                 </span>
                                 <button
                                   type="button"
